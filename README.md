@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GameCenter
 
-## Getting Started
+GameCenter is a playful browser-based board game hub built to grow in phases. Phase 1 establishes the lobby, game routes, shared theme system, and project structure. The current scope is intentionally frontend-first so deployment stays simple while the game foundations harden.
 
-First, run the development server:
+## Current Scope
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Landing page with cards for available games
+- Dedicated routes for \`chess\` and \`checkers\`
+- Global theme switcher that affects layout, colors, fonts, buttons, board styling, and piece styling
+- Shared board preview components for future game logic
+- Planning and tracking files for stable execution across phases
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- \`Next.js\`
+- \`React\`
+- \`TypeScript\`
+- \`Tailwind CSS v4\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+- \`npm run dev\`
+- \`npm run build\`
+- \`npm run lint\`
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- \`src/app\`
+- \`src/components\`
+- \`src/lib\`
+- \`docs/decisions\`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Phase Model
 
-## Deploy on Vercel
+- \`Phase 1\`: app shell, playful UI, theme engine, route foundations
+- \`Phase 2\`: first playable game, shared board framework, stronger tests
+- \`Phase 3+\`: more games, persistence, AI or multiplayer, deployment hardening
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Detailed planning lives in [docs/roadmap.md](./docs/roadmap.md) and [docs/architecture.md](./docs/architecture.md).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Git Conventions
+
+Use conventional commits with readable intent:
+
+- \`feat: add landing page animations\`
+- \`feat: add checkers board shell\`
+- \`chore: fix vercel config\`
+- \`docs: add phase roadmap\`
+
+## Deployment Direction
+
+The repo is being shaped for later deployment on Vercel. Keep Phase 1 static-first and avoid backend assumptions until there is a real need.

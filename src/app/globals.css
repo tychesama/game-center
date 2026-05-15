@@ -1,26 +1,187 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gc-background: #fff1d6;
+  --gc-surface: #fffaf0;
+  --gc-surface-strong: #fff3d8;
+  --gc-ink: #21160b;
+  --gc-muted: #6e5843;
+  --gc-accent: #ffd447;
+  --gc-accent-strong: #ff6b35;
+  --gc-board-light: #f8dfaa;
+  --gc-board-dark: #2a9d8f;
+  --gc-piece-light: #fff6df;
+  --gc-piece-dark: #231f20;
+  --gc-button-bg: #21160b;
+  --gc-button-fg: #fffaf0;
+  --gc-radius: 1.4rem;
+  --gc-font-display: var(--font-bricolage);
+  --gc-board-shadow: 8px 8px 0 var(--gc-ink);
+  --gc-card-shadow: 8px 8px 0 var(--gc-ink);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--gc-background);
+  --color-foreground: var(--gc-ink);
+  --font-sans: var(--gc-font-display);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--gc-background);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--gc-accent) 24%, transparent), transparent 24%),
+    var(--gc-background);
+  color: var(--gc-ink);
+  font-family: var(--gc-font-display), ui-sans-serif, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: var(--gc-accent);
+  color: var(--gc-ink);
+}
+
+[data-button-style="chunky"] .gc-button {
+  border-radius: calc(var(--gc-radius) - 0.2rem);
+  box-shadow: 6px 6px 0 var(--gc-ink);
+}
+
+[data-button-style="sleek"] .gc-button {
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--gc-ink);
+}
+
+[data-button-style="soft"] .gc-button {
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--gc-accent-strong) 24%, transparent);
+}
+
+[data-piece-style="classic"] .gc-piece {
+  border-radius: 999px;
+}
+
+[data-piece-style="gem"] .gc-piece {
+  border-radius: 1rem;
+  transform: rotate(45deg);
+}
+
+[data-piece-style="ticket"] .gc-piece {
+  border-radius: 0.75rem;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 18%, 100% 82%, 90% 100%, 10% 100%, 0% 82%, 0% 18%);
+}
+
+[data-board-style="grid"] .gc-board {
+  border-radius: 1.75rem;
+}
+
+[data-board-style="stage"] .gc-board {
+  border-radius: 2rem;
+  box-shadow: 0 20px 45px color-mix(in srgb, var(--gc-accent-strong) 25%, transparent);
+}
+
+[data-board-style="arcade"] .gc-board {
+  border-radius: 1.2rem;
+  outline: 4px solid color-mix(in srgb, var(--gc-accent) 65%, white);
+  outline-offset: 4px;
+}
+
+.gc-chip {
+  border-radius: 999px;
+  background: var(--gc-accent);
+  color: var(--gc-ink);
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 5px 5px 0 var(--gc-ink);
+}
+
+.gc-badge {
+  border: 2px solid var(--gc-ink);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc-surface) 84%, white);
+  padding: 0.7rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gc-panel {
+  border: 2px solid var(--gc-ink);
+  border-radius: var(--gc-radius);
+  background: color-mix(in srgb, var(--gc-surface) 92%, white);
+  box-shadow: var(--gc-card-shadow);
+}
+
+.gc-button {
+  border: 2px solid var(--gc-ink);
+  background: var(--gc-button-bg);
+  color: var(--gc-button-fg);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.gc-button:hover {
+  transform: translateY(-1px);
+}
+
+.gc-button:focus-visible,
+.gc-select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--gc-accent-strong) 72%, white);
+  outline-offset: 3px;
+}
+
+.gc-select {
+  border: 2px solid var(--gc-ink);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc-surface) 92%, white);
+  color: var(--gc-ink);
+  padding: 0.8rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gc-lobby-glow {
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--gc-accent) 45%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--gc-board-dark) 25%, transparent), transparent 28%),
+    linear-gradient(135deg, color-mix(in srgb, var(--gc-surface) 95%, white), color-mix(in srgb, var(--gc-background) 88%, white));
 }
