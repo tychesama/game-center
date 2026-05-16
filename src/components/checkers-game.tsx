@@ -25,7 +25,6 @@ export function CheckersGame() {
   const [timers, setTimers] = useState(initialTimers);
   const [dragSource, setDragSource] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
   const celebrationKey = useRef<string | null>(null);
 
   useEffect(() => {
@@ -54,7 +53,7 @@ export function CheckersGame() {
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [state.turn, state.status.type, tick]);
+  }, [state.turn, state.status.type]);
 
   useEffect(() => {
     if (!feedback) {
@@ -90,7 +89,6 @@ export function CheckersGame() {
       if (!before.legalMoves.some((move) => move.from === before.selected && move.to === index)) {
         setFeedback("Illegal move.");
       }
-      setTick((value) => value + 1);
       return;
     }
 
@@ -110,7 +108,6 @@ export function CheckersGame() {
   function reset() {
     setState(createInitialCheckersState());
     setTimers(initialTimers);
-    setTick(0);
     celebrationKey.current = null;
   }
 
@@ -153,7 +150,6 @@ export function CheckersGame() {
                   const from = Number(event.dataTransfer.getData("text/plain"));
                   if (!Number.isNaN(from)) {
                     setState((current) => tryCheckersMove(current, from, index));
-                    setTick((value) => value + 1);
                   }
                   setDragSource(null);
                 }}
