@@ -1,5 +1,4 @@
-import { CheckersGame } from "@/components/checkers-game";
-import { GameShell } from "@/components/game-shell";
+import { CheckersPageClient } from "@/components/checkers-page-client";
 import { getGame } from "@/lib/games";
 
 export default function CheckersPage() {
@@ -9,9 +8,5 @@ export default function CheckersPage() {
     return null;
   }
 
-  return (
-    <GameShell game={game}>
-      <CheckersGame />
-    </GameShell>
-  );
+  return <CheckersPageClient game={game} />;
 }

@@ -1,6 +1,6 @@
 import { gameThemes } from "./themes";
 
-export type GameSlug = "chess" | "checkers";
+export type GameSlug = "chess" | "checkers" | "tictactoe" | "rps";
 
 export type Game = {
   slug: GameSlug;
@@ -35,6 +35,28 @@ export const games: Game[] = [
     status: "Playable",
     href: "/checkers",
     theme: gameThemes.checkers,
+  },
+  {
+    slug: "tictactoe",
+    title: "Tic Tac Toe",
+    eyebrow: "Pocket duel",
+    description:
+      "Fast solo rounds against an arcade bot with turn logic, win checks, and instant rematches.",
+    players: "1 player vs bot",
+    status: "Playable",
+    href: "/tictactoe",
+    theme: gameThemes.tictactoe,
+  },
+  {
+    slug: "rps",
+    title: "Rock Paper Scissors",
+    eyebrow: "Lucky throw",
+    description:
+      "Quick best-of chaos against a randomizing arcade rival with score tracking and round feedback.",
+    players: "1 player vs randomizer",
+    status: "Playable",
+    href: "/rps",
+    theme: gameThemes.rps,
   },
 ];
 

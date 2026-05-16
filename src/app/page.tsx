@@ -29,7 +29,7 @@ export default function Home() {
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
                   Modes
                 </p>
-                <p className="mt-2 text-3xl font-black">2</p>
+                <p className="mt-2 text-3xl font-black">4</p>
               </div>
               <div className="gc-panel p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">

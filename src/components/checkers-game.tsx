@@ -20,7 +20,7 @@ const initialTimers: Timers = {
   black: 600,
 };
 
-export function CheckersGame() {
+export function CheckersGame(props: { onFeedbackChange?: (message: string | null) => void }) {
   const [state, setState] = useState(createInitialCheckersState);
   const [timers, setTimers] = useState(initialTimers);
   const [dragSource, setDragSource] = useState<number | null>(null);
@@ -58,12 +58,14 @@ export function CheckersGame() {
 
   useEffect(() => {
     if (!feedback) {
+      props.onFeedbackChange?.(null);
       return;
     }
 
+    props.onFeedbackChange?.(feedback);
     const timeout = window.setTimeout(() => setFeedback(null), 1800);
     return () => window.clearTimeout(timeout);
-  }, [feedback]);
+  }, [feedback, props]);
 
   useEffect(() => {
     if (state.status.type !== "win" || !state.status.winner) {
@@ -114,7 +116,6 @@ export function CheckersGame() {
 
   return (
     <div className="relative grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
-      <MoveFeedback message={feedback} />
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -287,22 +288,6 @@ function createEmptyDragImage() {
   image.width = 1;
   image.height = 1;
   return image;
-}
-
-function MoveFeedback({ message }: { message: string | null }) {
-  if (!message) {
-    return null;
-  }
-
-  return (
-    <div
-      className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[var(--gc-ink)] shadow-[var(--gc-card-shadow)]"
-      aria-live="assertive"
-      role="alert"
-    >
-      {message}
-    </div>
-  );
 }
 
 function TurnBadge({ side }: { side: CheckersColor }) {

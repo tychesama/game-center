@@ -6,9 +6,22 @@ import type { Game } from "@/lib/games";
 type GameShellProps = {
   game: Game;
   children: React.ReactNode;
+  insights?: {
+    ruleset: string;
+    focus: string;
+    controls: string;
+  };
+  feedback?: React.ReactNode;
 };
 
-export function GameShell({ game, children }: GameShellProps) {
+const defaultInsights = {
+  ruleset:
+    "Local two-player flow with timers, move validation, feedback, and end-state celebration.",
+  focus: "Stable interaction first, then broader polish, tests, and deployment hardening.",
+  controls: "Use either click-to-move or drag-and-drop. Legal targets preview while dragging.",
+};
+
+export function GameShell({ game, children, insights = defaultInsights, feedback }: GameShellProps) {
   return (
     <main
       data-game-theme={game.theme.name}
@@ -71,7 +84,7 @@ export function GameShell({ game, children }: GameShellProps) {
                 Ruleset
               </p>
               <p className="mt-3 text-base font-semibold leading-7">
-                Local two-player flow with timers, move validation, feedback, and end-state celebration.
+                {insights.ruleset}
               </p>
             </div>
             <div className="gc-panel p-5">
@@ -79,7 +92,7 @@ export function GameShell({ game, children }: GameShellProps) {
                 Focus
               </p>
               <p className="mt-3 text-base font-semibold leading-7">
-                Stable interaction first, then broader polish, tests, and deployment hardening.
+                {insights.focus}
               </p>
             </div>
             <div className="gc-panel p-5">
@@ -87,10 +100,11 @@ export function GameShell({ game, children }: GameShellProps) {
                 Controls
               </p>
               <p className="mt-3 text-base font-semibold leading-7">
-                Use either click-to-move or drag-and-drop. Legal targets preview while dragging.
+                {insights.controls}
               </p>
             </div>
           </div>
+          {feedback ? <div className="gc-panel p-5">{feedback}</div> : null}
         </div>
       </div>
       </section>

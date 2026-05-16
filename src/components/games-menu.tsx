@@ -4,10 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const games = [
-  { href: "/chess", label: "Chess", detail: "Full rules, timer, special moves" },
-  { href: "/checkers", label: "Checkers", detail: "Forced captures and kinging" },
-];
+import { games } from "@/lib/games";
 
 export function GamesMenu() {
   const pathname = usePathname();
@@ -46,7 +43,7 @@ export function GamesMenu() {
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
       >
-        <span>{activeGame ? activeGame.label : "Games"}</span>
+        <span>{activeGame ? activeGame.title : "Games"}</span>
         <span className={open ? "rotate-180 transition" : "transition"}>▾</span>
       </button>
 
@@ -67,10 +64,10 @@ export function GamesMenu() {
                 ].join(" ")}
               >
                 <span className="block text-sm font-black uppercase tracking-[0.14em]">
-                  {game.label}
+                  {game.title}
                 </span>
                 <span className="mt-1 block text-sm font-semibold text-[var(--gc-muted)]">
-                  {game.detail}
+                  {game.description}
                 </span>
               </Link>
             );

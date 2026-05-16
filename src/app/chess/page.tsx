@@ -1,5 +1,4 @@
-import { ChessGame } from "@/components/chess-game";
-import { GameShell } from "@/components/game-shell";
+import { ChessPageClient } from "@/components/chess-page-client";
 import { getGame } from "@/lib/games";
 
 export default function ChessPage() {
@@ -9,9 +8,5 @@ export default function ChessPage() {
     return null;
   }
 
-  return (
-    <GameShell game={game}>
-      <ChessGame />
-    </GameShell>
-  );
+  return <ChessPageClient game={game} />;
 }
