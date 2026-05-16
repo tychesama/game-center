@@ -211,7 +211,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                       piece.color === "red"
                         ? "bg-[var(--gc-piece-dark)] text-[var(--gc-piece-light)]"
                         : "bg-[var(--gc-piece-light)] text-[var(--gc-piece-dark)]",
-                      dragSource === index ? "opacity-35 cursor-none" : "cursor-grab",
+                      dragSource === index ? "opacity-0 cursor-none" : "cursor-grab",
                     ].join(" ")}
                   >
                     {piece.king ? "K" : ""}

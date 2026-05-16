@@ -47,7 +47,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const board = game.board();
   const turn = game.turn() === "w" ? "white" : "black";
   const pieceSet = getActiveChessPieceSet();
-  const pieceSizeClass = pieceSet === "arcade" ? "h-[98%] w-[98%]" : "h-[88%] w-[88%]";
+  const pieceSizeClass = pieceSet === "arcade" ? "h-[104%] w-[104%]" : "h-[94%] w-[94%]";
   const draggedPiece = dragSource ? game.get(dragSource) : null;
 
   useEffect(() => {
@@ -278,7 +278,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                         width={96}
                         height={96}
                         className={[
-                          "block object-contain object-center opacity-70 drop-shadow-[0_6px_10px_rgba(0,0,0,0.2)]",
+                          "block object-contain object-center opacity-75 drop-shadow-[0_6px_10px_rgba(0,0,0,0.2)]",
                           pieceSizeClass,
                         ].join(" ")}
                       />

@@ -50,7 +50,7 @@ export function RpsGame() {
 
     celebrationKey.current = key;
     if (result === "player") {
-      void confetti({ particleCount: 110, spread: 65, origin: { y: 0.7 }, zIndex: 9999 });
+      burstConfetti();
     }
   }, [botThrow, playerThrow]);
 
@@ -134,6 +134,17 @@ export function RpsGame() {
           </div>
         </div>
 
+        <div className="gc-panel grid gap-4 p-5 md:grid-cols-[1fr_10rem_1fr] md:items-center">
+          <RoundCard label="You chose" throwValue={playerThrow} />
+          <div className="flex min-h-36 flex-col items-center justify-center rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-strong)] px-4 py-6 text-center">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--gc-muted)]">Battlezone</p>
+            <p className="mt-3 text-6xl font-black leading-none">
+              {countdown !== null ? countdown : "VS"}
+            </p>
+          </div>
+          <RoundCard label="Bot chose" throwValue={botThrow} mirrored />
+        </div>
+
         <div className="grid gap-4 md:grid-cols-3">
           {throws.map((choice) => (
             <button
@@ -141,7 +152,7 @@ export function RpsGame() {
               type="button"
               onClick={() => playRound(choice)}
               disabled={countdown !== null}
-              className="gc-panel flex min-h-44 flex-col items-center justify-center gap-4 p-6 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
+              className="gc-panel flex min-h-40 flex-col items-center justify-center gap-4 p-5 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
                 <ThrowIcon throwValue={choice} />
@@ -152,12 +163,6 @@ export function RpsGame() {
               </span>
             </button>
           ))}
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          <RoundCard label="You played" throwValue={playerThrow} />
-          <RoundCard label="Countdown" value={countdown !== null ? String(countdown) : "Ready"} />
-          <RoundCard label="Bot played" throwValue={botThrow} mirrored />
         </div>
       </section>
 
@@ -184,19 +189,19 @@ export function RpsGame() {
   );
 }
 
-function RoundCard(props: { label: string; value?: string; throwValue?: Throw | null; mirrored?: boolean }) {
+function RoundCard(props: { label: string; throwValue?: Throw | null; mirrored?: boolean }) {
   return (
-    <div className="gc-panel p-5">
+    <div className="rounded-[var(--gc-radius)] bg-[var(--gc-panel-soft)] p-5">
       <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{props.label}</p>
       {props.throwValue ? (
-        <div className="mt-3 flex items-center gap-4">
-          <span className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--gc-panel-float)] p-3">
+        <div className="mt-4 flex min-h-24 items-center justify-center gap-4">
+          <span className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--gc-panel-float)] p-3">
             <ThrowIcon throwValue={props.throwValue} mirrored={props.mirrored} />
           </span>
           <p className="text-2xl font-black">{labels[props.throwValue]}</p>
         </div>
       ) : (
-        <p className="mt-3 text-3xl font-black">{props.value ?? "Waiting"}</p>
+        <p className="mt-4 min-h-24 text-3xl font-black">Waiting</p>
       )}
     </div>
   );
@@ -251,4 +256,14 @@ function resolveRound(player: Throw, bot: Throw) {
 
 function getRandomThrow(): Throw {
   return throws[Math.floor(Math.random() * throws.length)];
+}
+
+function burstConfetti() {
+  void confetti({
+    particleCount: 140,
+    spread: 72,
+    startVelocity: 48,
+    origin: { y: 0.64 },
+    zIndex: 9999,
+  });
 }
