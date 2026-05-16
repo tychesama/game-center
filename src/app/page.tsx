@@ -3,11 +3,10 @@ import { games } from "@/lib/games";
 
 export default function Home() {
   return (
-    <main className="overflow-hidden">
+    <main className="relative min-h-[calc(100vh-5.5rem)] overflow-hidden">
+      <div className="gc-lobby-glow pointer-events-none absolute inset-0" />
       <section className="relative mx-auto flex min-h-[calc(100vh-5.5rem)] w-full max-w-7xl flex-col px-6 py-8 sm:px-10 lg:px-16">
-        <div className="gc-lobby-glow pointer-events-none absolute inset-0 -z-0" />
-
-        <div className="grid flex-1 items-center gap-10 py-10 lg:grid-cols-[1.04fr_0.96fr]">
+        <div className="grid flex-1 items-center gap-10 py-10 xl:grid-cols-[1.08fr_0.92fr]">
           <div className="max-w-3xl">
             <p className="gc-chip mb-5 inline-flex">
               Pick a board, start the ritual
@@ -24,6 +23,26 @@ export default function Home() {
               <span className="gc-badge">Playable chess</span>
               <span className="gc-badge">Playable checkers</span>
               <span className="gc-badge">Drag or click</span>
+            </div>
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              <div className="gc-panel p-4">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
+                  Modes
+                </p>
+                <p className="mt-2 text-3xl font-black">2</p>
+              </div>
+              <div className="gc-panel p-4">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
+                  Input
+                </p>
+                <p className="mt-2 text-3xl font-black">Drag + Click</p>
+              </div>
+              <div className="gc-panel p-4">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
+                  Themes
+                </p>
+                <p className="mt-2 text-3xl font-black">3</p>
+              </div>
             </div>
           </div>
 
