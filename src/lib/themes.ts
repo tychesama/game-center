@@ -7,6 +7,7 @@ export type GameTheme = {
   ink: string;
   muted: string;
   accent: string;
+  accentInk: string;
   accentStrong: string;
   boardLight: string;
   boardDark: string;
@@ -25,6 +26,7 @@ export type ThemePreset = {
   buttonStyle: "chunky" | "sleek" | "soft";
   boardStyle: "grid" | "stage" | "arcade";
   pieceStyle: "classic" | "gem" | "ticket";
+  chessPieceSet: "arcade" | "midnight" | "festival";
   variables: Record<string, string>;
 };
 
@@ -35,6 +37,7 @@ export const defaultTheme: GameTheme = {
   ink: "#21160b",
   muted: "#7b624a",
   accent: "#ffd447",
+  accentInk: "#21160b",
   accentStrong: "#ff6b35",
   boardLight: "#f8dfaa",
   boardDark: "#2a9d8f",
@@ -51,6 +54,7 @@ export const defaultThemePreset: ThemePreset = {
   buttonStyle: "chunky",
   boardStyle: "arcade",
   pieceStyle: "classic",
+  chessPieceSet: "arcade",
   variables: {
     "--gc-background": "#fff1d6",
     "--gc-surface": "#fffaf0",
@@ -58,6 +62,7 @@ export const defaultThemePreset: ThemePreset = {
     "--gc-ink": "#21160b",
     "--gc-muted": "#6e5843",
     "--gc-accent": "#ffd447",
+    "--gc-accent-ink": "#21160b",
     "--gc-accent-strong": "#ff6b35",
     "--gc-board-light": "#f8dfaa",
     "--gc-board-dark": "#2a9d8f",
@@ -80,15 +85,17 @@ export const themePresets = {
     buttonStyle: "sleek",
     boardStyle: "stage",
     pieceStyle: "gem",
+    chessPieceSet: "midnight",
     variables: {
-      "--gc-background": "#121a30",
-      "--gc-surface": "#1e2a46",
-      "--gc-surface-strong": "#223153",
-      "--gc-ink": "#eef4ff",
-      "--gc-muted": "#b9caef",
+      "--gc-background": "#10192f",
+      "--gc-surface": "#233455",
+      "--gc-surface-strong": "#30446d",
+      "--gc-ink": "#f8fbff",
+      "--gc-muted": "#e2ecff",
       "--gc-accent": "#6cf0ff",
+      "--gc-accent-ink": "#08111f",
       "--gc-accent-strong": "#ff8a5b",
-      "--gc-board-light": "#314772",
+      "--gc-board-light": "#476595",
       "--gc-board-dark": "#141d33",
       "--gc-piece-light": "#f7fffc",
       "--gc-piece-dark": "#ff8a5b",
@@ -106,6 +113,7 @@ export const themePresets = {
     buttonStyle: "soft",
     boardStyle: "grid",
     pieceStyle: "ticket",
+    chessPieceSet: "festival",
     variables: {
       "--gc-background": "#fff3fa",
       "--gc-surface": "#ffffff",
@@ -113,6 +121,7 @@ export const themePresets = {
       "--gc-ink": "#2b1023",
       "--gc-muted": "#7d506d",
       "--gc-accent": "#ff5da2",
+      "--gc-accent-ink": "#2b1023",
       "--gc-accent-strong": "#00a38c",
       "--gc-board-light": "#ffd7ea",
       "--gc-board-dark": "#00a38c",
@@ -138,6 +147,7 @@ export const gameThemes = {
     ink: "#22180f",
     muted: "#715f4b",
     accent: "#d6a84f",
+    accentInk: "#22180f",
     accentStrong: "#6b2f1a",
     boardLight: "#f2d9b1",
     boardDark: "#4a2f20",
@@ -154,6 +164,7 @@ export const gameThemes = {
     ink: "#2b1118",
     muted: "#7d4c58",
     accent: "#ff477e",
+    accentInk: "#2b1118",
     accentStrong: "#1f9e89",
     boardLight: "#ffd4dd",
     boardDark: "#141414",
@@ -165,6 +176,23 @@ export const gameThemes = {
   },
 } satisfies Record<string, GameTheme>;
 
+export function getActiveThemeName(): ThemePresetName {
+  if (typeof window === "undefined") {
+    return "arcade";
+  }
+
+  const saved = window.localStorage.getItem("game-center-theme");
+  if (saved === "midnight" || saved === "festival" || saved === "arcade") {
+    return saved;
+  }
+
+  return "arcade";
+}
+
+export function getActiveChessPieceSet() {
+  return themePresets[getActiveThemeName()].chessPieceSet;
+}
+
 export function themeStyle(theme: GameTheme): React.CSSProperties {
   return {
     "--gc-background": theme.background,
@@ -172,6 +200,7 @@ export function themeStyle(theme: GameTheme): React.CSSProperties {
     "--gc-ink": theme.ink,
     "--gc-muted": theme.muted,
     "--gc-accent": theme.accent,
+    "--gc-accent-ink": theme.accentInk,
     "--gc-accent-strong": theme.accentStrong,
     "--gc-board-light": theme.boardLight,
     "--gc-board-dark": theme.boardDark,

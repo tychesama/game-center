@@ -2,7 +2,6 @@ import Link from "next/link";
 import type React from "react";
 
 import type { Game } from "@/lib/games";
-import { themeStyle } from "@/lib/themes";
 
 type GameShellProps = {
   game: Game;
@@ -13,13 +12,18 @@ export function GameShell({ game, children }: GameShellProps) {
   return (
     <main
       data-game-theme={game.theme.name}
-      style={themeStyle(game.theme)}
+      style={
+        {
+          "--gc-game-accent": game.theme.accent,
+          "--gc-game-accent-strong": game.theme.accentStrong,
+        } as React.CSSProperties
+      }
       className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-8 sm:px-10 lg:px-16"
     >
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <aside className="gc-panel flex flex-col justify-between p-6 sm:p-8">
           <div>
-            <p className="font-mono text-sm font-bold uppercase tracking-[0.22em] text-[var(--gc-accent-strong)]">
+            <p className="font-mono text-sm font-bold uppercase tracking-[0.22em] text-[var(--gc-game-accent-strong)]">
               {game.eyebrow}
             </p>
             <h1 className="mt-3 text-6xl font-black leading-none tracking-[-0.08em]">
@@ -31,7 +35,7 @@ export function GameShell({ game, children }: GameShellProps) {
           </div>
 
           <div className="mt-10 grid gap-3 text-sm font-black uppercase tracking-[0.16em]">
-            <span className="rounded-full bg-[var(--gc-accent)] px-4 py-3">
+            <span className="rounded-full bg-[var(--gc-game-accent)] px-4 py-3 text-[var(--gc-accent-ink)]">
               {game.players}
             </span>
             <span className="rounded-full border-2 border-[var(--gc-ink)] px-4 py-3">

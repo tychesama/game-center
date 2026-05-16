@@ -7,6 +7,7 @@
   --gc-ink: #21160b;
   --gc-muted: #6e5843;
   --gc-accent: #ffd447;
+  --gc-accent-ink: #21160b;
   --gc-accent-strong: #ff6b35;
   --gc-board-light: #f8dfaa;
   --gc-board-dark: #2a9d8f;
@@ -60,7 +61,7 @@ button {
 
 ::selection {
   background: var(--gc-accent);
-  color: var(--gc-ink);
+  color: var(--gc-accent-ink);
 }
 
 [data-button-style="chunky"] .gc-button {
@@ -122,7 +123,8 @@ button {
 .gc-badge {
   border: 2px solid var(--gc-ink);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--gc-surface) 84%, white);
+  background: var(--gc-surface);
+  color: var(--gc-ink);
   padding: 0.7rem 1rem;
   font-size: 0.78rem;
   font-weight: 900;
@@ -133,7 +135,8 @@ button {
 .gc-panel {
   border: 2px solid var(--gc-ink);
   border-radius: var(--gc-radius);
-  background: color-mix(in srgb, var(--gc-surface) 92%, white);
+  background: var(--gc-surface);
+  color: var(--gc-ink);
   box-shadow: var(--gc-card-shadow);
 }
 
@@ -170,7 +173,7 @@ button {
 .gc-select {
   border: 2px solid var(--gc-ink);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--gc-surface) 92%, white);
+  background: var(--gc-surface);
   color: var(--gc-ink);
   padding: 0.8rem 1rem;
   font-size: 0.78rem;

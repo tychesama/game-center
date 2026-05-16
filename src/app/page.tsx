@@ -17,13 +17,13 @@ export default function Home() {
             </h1>
             <p className="mt-7 max-w-2xl text-lg font-semibold leading-8 text-[var(--gc-muted)]">
               GameCenter is a playful board-game hub built for modular growth.
-              Phase 1 locks the shell, theme engine, and game routes before real
-              move logic starts landing.
+              Phase 2 brings real local chess and checkers foundations into the
+              cabinet without sacrificing the strange little carnival energy.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <span className="gc-badge">Chess shell</span>
-              <span className="gc-badge">Checkers shell</span>
-              <span className="gc-badge">Theme switcher live</span>
+              <span className="gc-badge">Playable chess</span>
+              <span className="gc-badge">Playable checkers</span>
+              <span className="gc-badge">Drag or click</span>
             </div>
           </div>
 

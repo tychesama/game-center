@@ -8,7 +8,7 @@ Keep GameCenter easy to expand without mixing UI glue, theme logic, and game rul
 
 - \`src/app\`: routes and page composition
 - \`src/components\`: shared presentation and UI shell components
-- \`src/lib\`: static data, theme presets, and future domain helpers
+- \`src/lib\`: static data, theme presets, shared board helpers, and game domain rules
 
 ## Theme System
 
@@ -29,10 +29,16 @@ Implementation rule:
 
 ## Game Boundaries
 
-Phase 1 uses preview boards only. When game logic begins:
+Phase 2 moves playable rules into dedicated modules:
+
+- \`src/lib/games/chess.ts\`: wraps \`chess.js\` for legal chess movement and game state
+- \`src/lib/games/checkers.ts\`: standard American checkers rules, forced captures, kinging, and win detection
+- \`src/components/board-game\`: reusable board, drag/drop, click selection, and clock presentation
+
+Implementation rules:
 
 - keep chess and checkers rules in isolated domain modules
-- keep board rendering reusable
+- keep board rendering reusable across games
 - do not place move validation inside page components
 - do not let theme logic know game rules
 

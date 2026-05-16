@@ -23,7 +23,7 @@ export function GameCard({ game }: { game: Game }) {
             {game.description}
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.16em]">
-            <span className="rounded-full bg-[var(--gc-accent)] px-3 py-2">
+            <span className="rounded-full bg-[var(--gc-accent)] px-3 py-2 text-[var(--gc-accent-ink)]">
               {game.players}
             </span>
             <span className="rounded-full border border-[var(--gc-ink)] px-3 py-2">

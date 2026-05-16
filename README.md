@@ -1,13 +1,15 @@
 # GameCenter
 
-GameCenter is a playful browser-based board game hub built to grow in phases. Phase 1 establishes the lobby, game routes, shared theme system, and project structure. The current scope is intentionally frontend-first so deployment stays simple while the game foundations harden.
+GameCenter is a playful browser-based board game hub built to grow in phases. Phase 2 establishes playable local board-game foundations while keeping the app frontend-first and modular.
 
 ## Current Scope
 
 - Landing page with cards for available games
-- Dedicated routes for \`chess\` and \`checkers\`
+- Dedicated playable routes for \`chess\` and \`checkers\`
 - Global theme switcher that affects layout, colors, fonts, buttons, board styling, and piece styling
-- Shared board preview components for future game logic
+- Shared board interaction components for click-to-move and drag-and-drop
+- Chess powered by \`chess.js\` for standard legal movement and game states
+- American checkers rules with forced captures, multi-jumps, kinging, timers, and win detection
 - Planning and tracking files for stable execution across phases
 
 ## Stack
@@ -16,6 +18,7 @@ GameCenter is a playful browser-based board game hub built to grow in phases. Ph
 - \`React\`
 - \`TypeScript\`
 - \`Tailwind CSS v4\`
+- \`chess.js\`
 
 ## Scripts
 
@@ -28,12 +31,13 @@ GameCenter is a playful browser-based board game hub built to grow in phases. Ph
 - \`src/app\`
 - \`src/components\`
 - \`src/lib\`
+- \`src/lib/games\`
 - \`docs/decisions\`
 
 ## Phase Model
 
 - \`Phase 1\`: app shell, playful UI, theme engine, route foundations
-- \`Phase 2\`: first playable game, shared board framework, stronger tests
+- \`Phase 2\`: playable chess/checkers, shared board framework, stronger tests
 - \`Phase 3+\`: more games, persistence, AI or multiplayer, deployment hardening
 
 Detailed planning lives in [docs/roadmap.md](./docs/roadmap.md) and [docs/architecture.md](./docs/architecture.md).

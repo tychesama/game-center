@@ -1,4 +1,4 @@
-import { BoardPreview } from "@/components/board-preview";
+import { CheckersGame } from "@/components/checkers-game";
 import { GameShell } from "@/components/game-shell";
 import { getGame } from "@/lib/games";
 
@@ -11,7 +11,7 @@ export default function CheckersPage() {
 
   return (
     <GameShell game={game}>
-      <BoardPreview variant="checkers" />
+      <CheckersGame />
     </GameShell>
   );
 }

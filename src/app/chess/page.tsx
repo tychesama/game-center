@@ -1,4 +1,4 @@
-import { BoardPreview } from "@/components/board-preview";
+import { ChessGame } from "@/components/chess-game";
 import { GameShell } from "@/components/game-shell";
 import { getGame } from "@/lib/games";
 
@@ -11,7 +11,7 @@ export default function ChessPage() {
 
   return (
     <GameShell game={game}>
-      <BoardPreview variant="chess" />
+      <ChessGame />
     </GameShell>
   );
 }

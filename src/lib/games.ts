@@ -19,9 +19,9 @@ export const games: Game[] = [
     title: "Chess",
     eyebrow: "Royal tactics",
     description:
-      "A strategic shell for future move validation, clocks, notation, and piece skins.",
+      "Full local chess with legal moves, captures, special rules, clocks, and a proper piece set.",
     players: "2 players",
-    status: "Board shell ready",
+    status: "Playable",
     href: "/chess",
     theme: gameThemes.chess,
   },
@@ -30,9 +30,9 @@ export const games: Game[] = [
     title: "Checkers",
     eyebrow: "Jump and crown",
     description:
-      "A fast baseline for stacked pieces, simple turn flow, and future capture rules.",
+      "American checkers with forced captures, multi-jumps, kinging, turn flow, and clocks.",
     players: "2 players",
-    status: "Board shell ready",
+    status: "Playable",
     href: "/checkers",
     theme: gameThemes.checkers,
   },
