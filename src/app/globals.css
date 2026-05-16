@@ -182,6 +182,22 @@ button {
   text-transform: uppercase;
 }
 
+.gc-header-control {
+  border: 2px solid color-mix(in srgb, var(--gc-ink) 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc-surface) 88%, white);
+  color: var(--gc-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--gc-ink) 45%, transparent);
+}
+
+.gc-header-control:hover {
+  transform: translateY(-1px);
+}
+
 .gc-lobby-glow {
   background:
     radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--gc-accent) 45%, transparent), transparent 28%),

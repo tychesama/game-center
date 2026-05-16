@@ -24,6 +24,7 @@ export function CheckersGame() {
   const [state, setState] = useState(createInitialCheckersState);
   const [timers, setTimers] = useState(initialTimers);
   const [dragSource, setDragSource] = useState<number | null>(null);
+  const [hoverTarget, setHoverTarget] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const celebrationKey = useRef<string | null>(null);
 
@@ -151,9 +152,25 @@ export function CheckersGame() {
                   event.preventDefault();
                   const from = Number(event.dataTransfer.getData("text/plain"));
                   if (!Number.isNaN(from)) {
-                    setState((current) => tryCheckersMove(current, from, index));
+                    const valid = state.legalMoves.some((move) => move.from === from && move.to === index);
+                    if (valid) {
+                      setState((current) => tryCheckersMove(current, from, index));
+                    } else {
+                      setFeedback("Illegal move.");
+                    }
                   }
                   setDragSource(null);
+                  setHoverTarget(null);
+                }}
+                onDragEnter={() => {
+                  if (dragSource !== null && state.legalMoves.some((move) => move.from === dragSource && move.to === index)) {
+                    setHoverTarget(index);
+                  }
+                }}
+                onDragLeave={() => {
+                  if (hoverTarget === index) {
+                    setHoverTarget(null);
+                  }
                 }}
                 className={[
                   "relative flex aspect-square items-center justify-center transition",
@@ -186,6 +203,9 @@ export function CheckersGame() {
                   >
                     {piece.king ? "K" : ""}
                   </span>
+                ) : null}
+                {!piece && dragSource !== null && hoverTarget === index && state.legalMoves.some((move) => move.from === dragSource && move.to === index) ? (
+                  <span className="pointer-events-none block h-[72%] w-[72%] rounded-full border-2 border-dashed border-[var(--gc-accent)] bg-[color:color-mix(in_srgb,var(--gc-accent)_24%,transparent)]" />
                 ) : null}
               </button>
             );

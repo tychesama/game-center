@@ -38,6 +38,7 @@ export function ChessGame() {
   const [timers, setTimers] = useState<Timers>(initialTimers);
   const [history, setHistory] = useState<string[]>([]);
   const [dragSource, setDragSource] = useState<Square | null>(null);
+  const [hoverTarget, setHoverTarget] = useState<Square | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const celebrationKey = useRef<string | null>(null);
@@ -137,6 +138,19 @@ export function ChessGame() {
     setStatus(resolveChessStatus(next));
   }
 
+  function legalTargetsForDrag() {
+    if (!dragSource) {
+      return [];
+    }
+    const piece = game.get(dragSource);
+    if (!piece || piece.color !== game.turn()) {
+      return [];
+    }
+    return game.moves({ square: dragSource, verbose: true }).map((move) => move.to);
+  }
+
+  const dragTargets = legalTargetsForDrag();
+
   function resetGame() {
     setFen(new Chess().fen());
     setSelected(null);
@@ -186,9 +200,25 @@ export function ChessGame() {
                     event.preventDefault();
                     const from = event.dataTransfer.getData("text/plain") as Square;
                     if (from) {
-                      commitMove(from, square);
+                      const valid = game.moves({ square: from, verbose: true }).some((move) => move.to === square);
+                      if (valid) {
+                        commitMove(from, square);
+                      } else {
+                        setFeedback("Illegal move.");
+                      }
                     }
                     setDragSource(null);
+                    setHoverTarget(null);
+                  }}
+                  onDragEnter={() => {
+                    if (dragTargets.includes(square)) {
+                      setHoverTarget(square);
+                    }
+                  }}
+                  onDragLeave={() => {
+                    if (hoverTarget === square) {
+                      setHoverTarget(null);
+                    }
                   }}
                   className={[
                     "relative flex aspect-square items-center justify-center transition",
@@ -224,6 +254,9 @@ export function ChessGame() {
                         priority={rowIndex < 2 || rowIndex > 5}
                       />
                     </span>
+                  ) : null}
+                  {!piece && dragSource && hoverTarget === square && dragTargets.includes(square) ? (
+                    <span className="pointer-events-none block h-[78%] w-[78%] rounded-full border-2 border-dashed border-[var(--gc-accent)] bg-[color:color-mix(in_srgb,var(--gc-accent)_24%,transparent)]" />
                   ) : null}
                 </button>
               );

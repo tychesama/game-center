@@ -39,9 +39,9 @@ export const metadata: Metadata = {
   title: "GameCenter",
   description: "A playful board game hub for chess, checkers, and future games.",
   icons: {
-    icon: "/gamecenter-logo.png",
-    shortcut: "/gamecenter-logo.png",
-    apple: "/gamecenter-logo.png",
+    icon: "/gamecenter-mark.svg",
+    shortcut: "/gamecenter-mark.svg",
+    apple: "/gamecenter-mark.svg",
   },
 };
 

@@ -18,15 +18,15 @@ export function GameShell({ game, children }: GameShellProps) {
           "--gc-game-accent-strong": game.theme.accentStrong,
         } as React.CSSProperties
       }
-      className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-8 sm:px-10 lg:px-16"
+      className="mx-auto flex w-full max-w-[1280px] flex-col gap-6 px-6 py-6 sm:px-10 xl:px-12"
     >
-      <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-        <aside className="gc-panel flex flex-col justify-between p-6 sm:p-8">
+      <div className="grid gap-6 xl:grid-cols-[22rem_minmax(0,1fr)]">
+        <aside className="gc-panel flex flex-col justify-between p-6">
           <div>
             <p className="font-mono text-sm font-bold uppercase tracking-[0.22em] text-[var(--gc-game-accent-strong)]">
               {game.eyebrow}
             </p>
-            <h1 className="mt-3 text-6xl font-black leading-none tracking-[-0.08em]">
+            <h1 className="mt-3 text-5xl font-black leading-none tracking-[0]">
               {game.title}
             </h1>
             <p className="mt-5 text-base font-semibold leading-7 text-[var(--gc-muted)]">
@@ -47,7 +47,7 @@ export function GameShell({ game, children }: GameShellProps) {
           </div>
         </aside>
 
-        <div className="gc-panel flex items-center justify-center p-5">{children}</div>
+        <div className="gc-panel p-5">{children}</div>
       </div>
     </main>
   );

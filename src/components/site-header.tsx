@@ -14,7 +14,7 @@ export function SiteHeader() {
           <Link href="/" className="flex items-center gap-3">
             <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] shadow-[4px_4px_0_var(--gc-ink)]">
               <Image
-                src="/gamecenter-logo.png"
+                src="/gamecenter-mark.svg"
                 alt="GameCenter logo"
                 width={32}
                 height={32}
@@ -32,7 +32,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="rounded-full border border-[color:color-mix(in_srgb,var(--gc-ink)_22%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_88%,white)] px-4 py-2 text-sm font-black uppercase tracking-[0.14em] transition hover:-translate-y-px"
+            className="gc-header-control px-4 py-2 text-sm font-black uppercase tracking-[0.14em]"
           >
             Lobby
           </Link>
