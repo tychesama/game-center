@@ -134,9 +134,9 @@ export function RpsGame() {
           </div>
         </div>
 
-        <div className="gc-panel grid gap-4 p-5 md:grid-cols-[1fr_10rem_1fr] md:items-center">
+        <div className="gc-panel grid gap-5 p-5 md:grid-cols-[1fr_11rem_1fr] md:items-center">
           <RoundCard label="You chose" throwValue={playerThrow} />
-          <div className="flex min-h-36 flex-col items-center justify-center rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-strong)] px-4 py-6 text-center">
+          <div className="order-first flex min-h-40 flex-col items-center justify-center rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-strong)] px-4 py-6 text-center md:order-none">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--gc-muted)]">Battlezone</p>
             <p className="mt-3 text-6xl font-black leading-none">
               {countdown !== null ? countdown : "VS"}
@@ -152,9 +152,9 @@ export function RpsGame() {
               type="button"
               onClick={() => playRound(choice)}
               disabled={countdown !== null}
-              className="gc-panel flex min-h-40 flex-col items-center justify-center gap-4 p-5 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
+              className="gc-panel flex min-h-48 flex-col items-center justify-center gap-4 p-5 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <span className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
+              <span className="relative flex h-32 w-32 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
                 <ThrowIcon throwValue={choice} />
               </span>
               <span className="text-2xl font-black uppercase tracking-[-0.06em]">{labels[choice]}</span>
@@ -191,17 +191,22 @@ export function RpsGame() {
 
 function RoundCard(props: { label: string; throwValue?: Throw | null; mirrored?: boolean }) {
   return (
-    <div className="rounded-[var(--gc-radius)] bg-[var(--gc-panel-soft)] p-5">
+    <div className="rounded-[var(--gc-radius)] bg-[var(--gc-panel-soft)] p-5 text-center">
       <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{props.label}</p>
       {props.throwValue ? (
-        <div className="mt-4 flex min-h-24 items-center justify-center gap-4">
-          <span className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--gc-panel-float)] p-3">
+        <div className="mt-4 flex min-h-40 flex-col items-center justify-center gap-3">
+          <span className="relative flex h-32 w-32 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
             <ThrowIcon throwValue={props.throwValue} mirrored={props.mirrored} />
           </span>
-          <p className="text-2xl font-black">{labels[props.throwValue]}</p>
+          <p className="text-2xl font-black uppercase tracking-[0.04em]">{labels[props.throwValue]}</p>
         </div>
       ) : (
-        <p className="mt-4 min-h-24 text-3xl font-black">Waiting</p>
+        <div className="mt-4 flex min-h-40 flex-col items-center justify-center gap-3">
+          <span className="relative flex h-32 w-32 items-center justify-center rounded-3xl border-2 border-dashed border-[color:color-mix(in_srgb,var(--gc-ink)_28%,transparent)] bg-[var(--gc-panel-float)] text-4xl font-black text-[var(--gc-muted)]">
+            ?
+          </span>
+          <p className="text-2xl font-black uppercase tracking-[0.04em]">Waiting</p>
+        </div>
       )}
     </div>
   );
