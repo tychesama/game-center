@@ -38,6 +38,11 @@ const monoFont = Space_Mono({
 export const metadata: Metadata = {
   title: "GameCenter",
   description: "A playful board game hub for chess, checkers, and future games.",
+  icons: {
+    icon: "/gamecenter-logo.png",
+    shortcut: "/gamecenter-logo.png",
+    apple: "/gamecenter-logo.png",
+  },
 };
 
 export default function RootLayout({
