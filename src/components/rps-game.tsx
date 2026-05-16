@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import confetti from "canvas-confetti";
 import { useEffect, useRef, useState } from "react";
 
@@ -145,14 +144,7 @@ export function RpsGame() {
               className="gc-panel flex min-h-44 flex-col items-center justify-center gap-4 p-6 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
-                <Image
-                  src={icons[choice]}
-                  alt={labels[choice]}
-                  fill={false}
-                  width={72}
-                  height={72}
-                  className="h-full w-full object-contain"
-                />
+                <ThrowIcon throwValue={choice} />
               </span>
               <span className="text-2xl font-black uppercase tracking-[-0.06em]">{labels[choice]}</span>
               <span className="rounded-full bg-[var(--gc-accent)] px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-accent-ink)]">
@@ -165,7 +157,7 @@ export function RpsGame() {
         <div className="grid gap-4 md:grid-cols-3">
           <RoundCard label="You played" throwValue={playerThrow} />
           <RoundCard label="Countdown" value={countdown !== null ? String(countdown) : "Ready"} />
-          <RoundCard label="Bot played" throwValue={botThrow} />
+          <RoundCard label="Bot played" throwValue={botThrow} mirrored />
         </div>
       </section>
 
@@ -192,21 +184,14 @@ export function RpsGame() {
   );
 }
 
-function RoundCard(props: { label: string; value?: string; throwValue?: Throw | null }) {
+function RoundCard(props: { label: string; value?: string; throwValue?: Throw | null; mirrored?: boolean }) {
   return (
     <div className="gc-panel p-5">
       <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{props.label}</p>
       {props.throwValue ? (
         <div className="mt-3 flex items-center gap-4">
           <span className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--gc-panel-float)] p-3">
-            <Image
-              src={icons[props.throwValue]}
-              alt={labels[props.throwValue]}
-              fill={false}
-              width={48}
-              height={48}
-              className="h-full w-full object-contain"
-            />
+            <ThrowIcon throwValue={props.throwValue} mirrored={props.mirrored} />
           </span>
           <p className="text-2xl font-black">{labels[props.throwValue]}</p>
         </div>
@@ -214,6 +199,28 @@ function RoundCard(props: { label: string; value?: string; throwValue?: Throw | 
         <p className="mt-3 text-3xl font-black">{props.value ?? "Waiting"}</p>
       )}
     </div>
+  );
+}
+
+function ThrowIcon(props: { throwValue: Throw; mirrored?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={[
+        "gc-rps-icon block h-full w-full",
+      ].join(" ")}
+      style={{
+        transform: props.mirrored ? "scaleX(-1)" : undefined,
+        WebkitMaskImage: `url(${icons[props.throwValue]})`,
+        maskImage: `url(${icons[props.throwValue]})`,
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+      }}
+    />
   );
 }
 

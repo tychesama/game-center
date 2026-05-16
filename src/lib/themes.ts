@@ -26,7 +26,7 @@ export type ThemePreset = {
   buttonStyle: "chunky" | "sleek" | "soft";
   boardStyle: "grid" | "stage" | "arcade";
   pieceStyle: "classic" | "gem" | "ticket";
-  chessPieceSet: "arcade" | "midnight" | "festival";
+  chessPieceSet: "arcade" | "royal" | "festival";
   variables: Record<string, string>;
 };
 
@@ -85,7 +85,7 @@ export const themePresets = {
     buttonStyle: "sleek",
     boardStyle: "stage",
     pieceStyle: "gem",
-    chessPieceSet: "midnight",
+    chessPieceSet: "royal",
     variables: {
       "--gc-background": "#10192f",
       "--gc-surface": "#233455",

@@ -47,6 +47,8 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const board = game.board();
   const turn = game.turn() === "w" ? "white" : "black";
   const pieceSet = getActiveChessPieceSet();
+  const pieceSizeClass = pieceSet === "arcade" ? "h-[98%] w-[98%]" : "h-[88%] w-[88%]";
+  const draggedPiece = dragSource ? game.get(dragSource) : null;
 
   useEffect(() => {
     if (!feedback) {
@@ -196,7 +198,12 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                   key={square}
                   type="button"
                   onClick={() => handleSquareSelect(square)}
-                  onDragOver={(event) => event.preventDefault()}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    if (dragTargets.includes(square)) {
+                      setHoverTarget(square);
+                    }
+                  }}
                   onDrop={(event) => {
                     event.preventDefault();
                     const from = event.dataTransfer.getData("text/plain") as Square;
@@ -234,15 +241,19 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                   {piece ? (
                     <span
                       draggable={status.type === "active" && piece.color === game.turn()}
-                  onDragStart={(event) => {
-                    event.dataTransfer.setData("text/plain", square);
-                    event.dataTransfer.effectAllowed = "move";
-                    event.dataTransfer.setDragImage(createEmptyDragImage(), 0, 0);
-                    setDragSource(square);
-                  }}
-                  onDragEnd={() => setDragSource(null)}
+                      onDragStart={(event) => {
+                        event.dataTransfer.setData("text/plain", square);
+                        event.dataTransfer.effectAllowed = "move";
+                        setDragSource(square);
+                        setSelected(square);
+                        setLegalTargets(game.moves({ square, verbose: true }).map((move) => move.to));
+                      }}
+                      onDragEnd={() => {
+                        setDragSource(null);
+                        setHoverTarget(null);
+                      }}
                       className={[
-                        "flex h-full w-full items-center justify-center",
+                        "group/piece flex h-full w-full items-center justify-center",
                         dragSource === square ? "opacity-0 cursor-none" : "cursor-grab",
                       ].join(" ")}
                     >
@@ -251,13 +262,27 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                         alt={(piece.color === "w" ? "White " : "Black ") + pieceNameMap[piece.type]}
                         width={96}
                         height={96}
-                        className="block h-[88%] w-[88%] object-contain object-center drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)] [image-rendering:auto]"
+                        className={[
+                          "block object-contain object-center drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)] transition duration-150 group-hover/piece:scale-110 [image-rendering:auto]",
+                          pieceSizeClass,
+                        ].join(" ")}
                         priority={rowIndex < 2 || rowIndex > 5}
                       />
                     </span>
                   ) : null}
-                  {!piece && dragSource && hoverTarget === square && dragTargets.includes(square) ? (
-                    <span className="pointer-events-none block h-[78%] w-[78%] rounded-full border-2 border-dashed border-[var(--gc-accent)] bg-[color:color-mix(in_srgb,var(--gc-accent)_24%,transparent)]" />
+                  {!piece && dragSource && hoverTarget === square && dragTargets.includes(square) && draggedPiece ? (
+                    <span className="pointer-events-none flex h-full w-full items-center justify-center">
+                      <Image
+                        src={resolveChessPieceAsset(pieceSet, draggedPiece.color, draggedPiece.type)}
+                        alt=""
+                        width={96}
+                        height={96}
+                        className={[
+                          "block object-contain object-center opacity-70 drop-shadow-[0_6px_10px_rgba(0,0,0,0.2)]",
+                          pieceSizeClass,
+                        ].join(" ")}
+                      />
+                    </span>
                   ) : null}
                 </button>
               );
@@ -349,16 +374,20 @@ function resolveChessStatus(game: Chess): GameStatus {
 }
 
 function resolveChessPieceAsset(
-  pieceSet: "arcade" | "midnight" | "festival",
+  pieceSet: "arcade" | "royal" | "festival",
   color: "w" | "b",
   type: keyof typeof pieceNameMap,
 ) {
   if (pieceSet === "arcade") {
-    const sideKey = color === "w" ? "w" : "b";
-    return "/assets/chess/classic/" + sideKey + type + ".png";
+    return "/assets/chess/set-arcade/" + color + type + ".png";
   }
 
-  const suffix = pieceSet === "midnight" ? "2" : "3";
+  if (pieceSet === "royal") {
+    const sideKey = color === "w" ? "w" : "b";
+    return "/assets/chess/set-royal/" + sideKey + type + ".svg";
+  }
+
+  const suffix = "3";
   const pieceKey =
     type === "p"
       ? "pawn"
@@ -372,14 +401,7 @@ function resolveChessPieceAsset(
               ? "queen"
               : "king";
   const sideKey = color === "w" ? "W" : "B";
-  return "/assets/chess/set-" + pieceSet + "/" + pieceKey + sideKey + suffix + ".png";
-}
-
-function createEmptyDragImage() {
-  const image = document.createElement("canvas");
-  image.width = 1;
-  image.height = 1;
-  return image;
+  return "/assets/chess/set-festival/" + pieceKey + sideKey + suffix + ".png";
 }
 
 function TurnBadge({ side }: { side: "white" | "black" }) {

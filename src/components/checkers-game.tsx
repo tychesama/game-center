@@ -43,7 +43,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
             status: {
               type: "win",
               winner: previous.turn === "red" ? "black" : "red",
-              message: (previous.turn === "red" ? "Black" : "Red") + " wins on time",
+              message: labelForColor(previous.turn === "red" ? "black" : "red") + " wins on time",
             },
           }));
           return { ...current, [state.turn]: 0 };
@@ -120,16 +120,16 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--gc-muted)]">
-              American checkers
+              Checkers
             </p>
             <p className="mt-1 text-lg font-semibold" aria-live="polite">
-              {state.status.message}
+              Aim for Victory!
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <TurnBadge side={state.turn} />
-            <TimerCard label="Red" active={state.turn === "red" && state.status.type === "active"} seconds={timers.red} />
-            <TimerCard label="Black" active={state.turn === "black" && state.status.type === "active"} seconds={timers.black} />
+            <TimerCard label={labelForColor("red")} active={state.turn === "red" && state.status.type === "active"} seconds={timers.red} />
+            <TimerCard label={labelForColor("black")} active={state.turn === "black" && state.status.type === "active"} seconds={timers.black} />
           </div>
         </div>
 
@@ -148,7 +148,12 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                 key={index}
                 type="button"
                 onClick={() => selectOrMove(index)}
-                onDragOver={(event) => event.preventDefault()}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  if (dragSource !== null && state.legalMoves.some((move) => move.from === dragSource && move.to === index)) {
+                    setHoverTarget(index);
+                  }
+                }}
                 onDrop={(event) => {
                   event.preventDefault();
                   const from = Number(event.dataTransfer.getData("text/plain"));
@@ -187,26 +192,42 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                 {piece ? (
                   <span
                     draggable={piece.color === state.turn && state.status.type === "active"}
-                  onDragStart={(event) => {
-                    event.dataTransfer.setData("text/plain", String(index));
-                    event.dataTransfer.effectAllowed = "move";
-                    event.dataTransfer.setDragImage(createEmptyDragImage(), 0, 0);
-                    setDragSource(index);
-                  }}
-                    onDragEnd={() => setDragSource(null)}
+                    onDragStart={(event) => {
+                      event.dataTransfer.setData("text/plain", String(index));
+                      event.dataTransfer.effectAllowed = "move";
+                      setDragSource(index);
+                      setState((current) => ({
+                        ...current,
+                        selected: index,
+                        status: { type: "active", message: labelForColor(current.turn) + " piece selected" },
+                      }));
+                    }}
+                    onDragEnd={() => {
+                      setDragSource(null);
+                      setHoverTarget(null);
+                    }}
                     className={[
-                      "gc-piece flex h-[72%] w-[72%] items-center justify-center border-2 border-[var(--gc-ink)] text-xl font-black shadow-[0_8px_18px_rgba(0,0,0,0.18)]",
+                      "gc-piece flex h-[72%] w-[72%] items-center justify-center border-2 border-[var(--gc-ink)] text-xl font-black shadow-[0_8px_18px_rgba(0,0,0,0.18)] transition duration-150 hover:scale-105",
                       piece.color === "red"
                         ? "bg-[var(--gc-piece-dark)] text-[var(--gc-piece-light)]"
                         : "bg-[var(--gc-piece-light)] text-[var(--gc-piece-dark)]",
-                      dragSource === index ? "opacity-0 cursor-none" : "cursor-grab",
+                      dragSource === index ? "opacity-35 cursor-none" : "cursor-grab",
                     ].join(" ")}
                   >
                     {piece.king ? "K" : ""}
                   </span>
                 ) : null}
                 {!piece && dragSource !== null && hoverTarget === index && state.legalMoves.some((move) => move.from === dragSource && move.to === index) ? (
-                  <span className="pointer-events-none block h-[72%] w-[72%] rounded-full border-2 border-dashed border-[var(--gc-accent)] bg-[color:color-mix(in_srgb,var(--gc-accent)_24%,transparent)]" />
+                  <span
+                    className={[
+                      "gc-piece pointer-events-none flex h-[72%] w-[72%] items-center justify-center border-2 border-[var(--gc-ink)] text-xl font-black opacity-75 shadow-[0_8px_18px_rgba(0,0,0,0.18)]",
+                      state.board[dragSource]?.color === "red"
+                        ? "bg-[var(--gc-piece-dark)] text-[var(--gc-piece-light)]"
+                        : "bg-[var(--gc-piece-light)] text-[var(--gc-piece-dark)]",
+                    ].join(" ")}
+                  >
+                    {state.board[dragSource]?.king ? "K" : ""}
+                  </span>
                 ) : null}
               </button>
             );
@@ -250,6 +271,7 @@ function TimerCard(props: { label: string; seconds: number; active: boolean }) {
     <div
       className={[
         "rounded-2xl border px-4 py-3 text-center",
+        "min-w-[6.25rem] shrink-0",
         props.active
           ? "border-[var(--gc-accent)] bg-[var(--gc-panel-accent-soft)]"
           : "border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[var(--gc-panel-soft)]",
@@ -270,7 +292,7 @@ function formatSeconds(totalSeconds: number) {
 }
 
 function labelForColor(color: CheckersColor) {
-  return color === "red" ? "Red" : "Black";
+  return color === "red" ? "Dark" : "Light";
 }
 
 function burstConfetti() {
@@ -283,16 +305,9 @@ function burstConfetti() {
   });
 }
 
-function createEmptyDragImage() {
-  const image = document.createElement("canvas");
-  image.width = 1;
-  image.height = 1;
-  return image;
-}
-
 function TurnBadge({ side }: { side: CheckersColor }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-4 py-3">
+    <div className="flex shrink-0 items-center gap-3 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-4 py-3">
       <span
         className={[
           "h-5 w-5 rounded-full border-2 border-[var(--gc-ink)]",
