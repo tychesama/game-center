@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import confetti from "canvas-confetti";
 import { Chess, type Square } from "chess.js";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { getActiveChessPieceSet } from "@/lib/themes";
 
@@ -39,6 +40,7 @@ export function ChessGame() {
   const [dragSource, setDragSource] = useState<Square | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
+  const celebrationKey = useRef<string | null>(null);
 
   const game = useMemo(() => new Chess(fen), [fen]);
   const board = game.board();
@@ -53,6 +55,20 @@ export function ChessGame() {
     const timeout = window.setTimeout(() => setFeedback(null), 1800);
     return () => window.clearTimeout(timeout);
   }, [feedback]);
+
+  useEffect(() => {
+    if (status.type !== "finished" || !status.winner) {
+      return;
+    }
+
+    const key = status.winner + "-" + history.length;
+    if (celebrationKey.current === key) {
+      return;
+    }
+
+    celebrationKey.current = key;
+    burstConfetti();
+  }, [history.length, status]);
 
   useEffect(() => {
     if (status.type !== "active") {
@@ -127,6 +143,7 @@ export function ChessGame() {
     setLegalTargets([]);
     setHistory([]);
     setMoveCount(0);
+    celebrationKey.current = null;
     setTimers(initialTimers);
     setStatus({ type: "active", message: "White to move" });
   }
@@ -245,6 +262,16 @@ export function ChessGame() {
       </aside>
     </div>
   );
+}
+
+function burstConfetti() {
+  void confetti({
+    particleCount: 150,
+    spread: 80,
+    startVelocity: 55,
+    origin: { y: 0.6 },
+    zIndex: 9999,
+  });
 }
 
 function resolveChessStatus(game: Chess): GameStatus {

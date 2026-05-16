@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import confetti from "canvas-confetti";
+import { useEffect, useRef, useState } from "react";
 
 import {
   createInitialCheckersState,
@@ -25,6 +26,7 @@ export function CheckersGame() {
   const [dragSource, setDragSource] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
+  const celebrationKey = useRef<string | null>(null);
 
   useEffect(() => {
     if (state.status.type !== "active") {
@@ -63,6 +65,20 @@ export function CheckersGame() {
     return () => window.clearTimeout(timeout);
   }, [feedback]);
 
+  useEffect(() => {
+    if (state.status.type !== "win" || !state.status.winner) {
+      return;
+    }
+
+    const key = state.status.winner + "-" + state.history.length;
+    if (celebrationKey.current === key) {
+      return;
+    }
+
+    celebrationKey.current = key;
+    burstConfetti();
+  }, [state.history.length, state.status]);
+
   function selectOrMove(index: number) {
     if (state.status.type !== "active") {
       return;
@@ -95,6 +111,7 @@ export function CheckersGame() {
     setState(createInitialCheckersState());
     setTimers(initialTimers);
     setTick(0);
+    celebrationKey.current = null;
   }
 
   return (
@@ -235,6 +252,16 @@ function formatSeconds(totalSeconds: number) {
 
 function labelForColor(color: CheckersColor) {
   return color === "red" ? "Red" : "Black";
+}
+
+function burstConfetti() {
+  void confetti({
+    particleCount: 150,
+    spread: 80,
+    startVelocity: 55,
+    origin: { y: 0.6 },
+    zIndex: 9999,
+  });
 }
 
 function createEmptyDragImage() {
