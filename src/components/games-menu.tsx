@@ -41,7 +41,7 @@ export function GamesMenu() {
     <div ref={ref} className="relative">
       <button
         type="button"
-        className="gc-header-control min-w-38 justify-between px-4 py-2 text-sm font-black uppercase tracking-[0.14em]"
+        className="gc-header-control gc-header-button min-w-38 justify-between px-4"
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}

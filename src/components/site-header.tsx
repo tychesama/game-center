@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import Image from "next/image";
 
 import { GamesMenu } from "@/components/games-menu";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -13,14 +10,20 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
             <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] shadow-[4px_4px_0_var(--gc-ink)]">
-              <Image
-                src="/gamecenter-mark.svg"
-                alt="GameCenter logo"
-                width={32}
-                height={32}
-                className="h-8 w-8 object-contain"
-                priority
-              />
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 64 64"
+                className="h-8 w-8"
+                fill="none"
+              >
+                <rect x="6" y="10" width="52" height="44" rx="14" fill="#1E2435" />
+                <rect x="10" y="14" width="44" height="36" rx="10" fill="#2A3550" />
+                <circle cx="22" cy="32" r="7" fill="#FFD447" />
+                <path d="M22 26v12M16 32h12" stroke="#1E2435" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="42" cy="27" r="4.5" fill="#6CF0FF" />
+                <circle cx="36" cy="37" r="4.5" fill="#FF8A5B" />
+                <circle cx="48" cy="37" r="4.5" fill="#FFE18E" />
+              </svg>
             </span>
             <span className="text-2xl font-black tracking-[0]">GameCenter</span>
           </Link>
@@ -32,7 +35,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="gc-header-control px-4 py-2 text-sm font-black uppercase tracking-[0.14em]"
+            className="gc-header-control gc-header-button px-4"
           >
             Lobby
           </Link>

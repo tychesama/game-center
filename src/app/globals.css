@@ -194,6 +194,15 @@ button {
   box-shadow: 3px 3px 0 color-mix(in srgb, var(--gc-ink) 45%, transparent);
 }
 
+.gc-header-button {
+  height: 2.75rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .gc-header-control:hover {
   transform: translateY(-1px);
 }

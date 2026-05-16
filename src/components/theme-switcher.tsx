@@ -7,16 +7,16 @@ export function ThemeSwitcher() {
   const { activeTheme, setThemeName } = useThemePreset();
 
   return (
-    <label className="gc-header-control flex items-center gap-2 px-3 py-2">
+    <label className="gc-header-control gc-header-button flex items-center gap-2 px-4">
       <span className="h-2.5 w-2.5 rounded-full border border-[var(--gc-ink)] bg-[var(--gc-accent)]" />
-      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gc-muted)]">
+      <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--gc-ink)]">
         Theme
       </span>
       <select
         aria-label="Select site theme"
         value={activeTheme.name}
         onChange={(event) => setThemeName(event.target.value as ThemePresetName)}
-        className="gc-select !border-0 !bg-transparent !p-0 text-xs"
+        className="gc-select !border-0 !bg-transparent !p-0 text-xs font-black uppercase tracking-[0.14em] text-[var(--gc-ink)]"
       >
         {themePresetList.map((theme) => (
           <option key={theme.name} value={theme.name}>
