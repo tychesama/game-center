@@ -357,7 +357,7 @@ function MoveFeedback({ message }: { message: string | null }) {
     <div
       className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[var(--gc-ink)] shadow-[var(--gc-card-shadow)]"
       aria-live="assertive"
-      role="status"
+      role="alert"
     >
       {message}
     </div>
