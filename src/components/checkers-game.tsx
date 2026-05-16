@@ -23,6 +23,7 @@ export function CheckersGame() {
   const [state, setState] = useState(createInitialCheckersState);
   const [timers, setTimers] = useState(initialTimers);
   const [dragSource, setDragSource] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -53,13 +54,26 @@ export function CheckersGame() {
     return () => window.clearInterval(interval);
   }, [state.turn, state.status.type, tick]);
 
+  useEffect(() => {
+    if (!feedback) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setFeedback(null), 1800);
+    return () => window.clearTimeout(timeout);
+  }, [feedback]);
+
   function selectOrMove(index: number) {
     if (state.status.type !== "active") {
       return;
     }
 
     if (state.selected !== null) {
+      const before = state;
       setState((current) => tryCheckersMove(current, current.selected as number, index));
+      if (!before.legalMoves.some((move) => move.from === before.selected && move.to === index)) {
+        setFeedback("Illegal move.");
+      }
       setTick((value) => value + 1);
       return;
     }
@@ -70,7 +84,11 @@ export function CheckersGame() {
         selected: index,
         status: { type: "active", message: labelForColor(current.turn) + " piece selected" },
       }));
+      return;
     }
+
+    const piece = state.board[index];
+    setFeedback(piece ? "Wrong piece. It is " + labelForColor(state.turn) + " to move." : "No piece selected.");
   }
 
   function reset() {
@@ -80,7 +98,8 @@ export function CheckersGame() {
   }
 
   return (
-    <div className="grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+    <div className="relative grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+      <MoveFeedback message={feedback} />
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -89,13 +108,14 @@ export function CheckersGame() {
             </p>
             <p className="mt-1 text-lg font-semibold">{state.status.message}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <TurnBadge side={state.turn} />
             <TimerCard label="Red" active={state.turn === "red" && state.status.type === "active"} seconds={timers.red} />
             <TimerCard label="Black" active={state.turn === "black" && state.status.type === "active"} seconds={timers.black} />
           </div>
         </div>
 
-        <div className="gc-board grid aspect-square grid-cols-8 overflow-hidden border-4 border-[var(--gc-ink)] bg-[var(--gc-board-light)] p-1 [box-shadow:var(--gc-board-shadow)]">
+        <div className={["gc-board grid aspect-square grid-cols-8 overflow-hidden border-4 border-[var(--gc-ink)] bg-[var(--gc-board-light)] p-1 [box-shadow:var(--gc-board-shadow)]", dragSource !== null ? "cursor-none" : ""].join(" ")}>
           {state.board.map((piece, index) => {
             const row = Math.floor(index / 8);
             const col = index % 8;
@@ -134,17 +154,19 @@ export function CheckersGame() {
                 {piece ? (
                   <span
                     draggable={piece.color === state.turn && state.status.type === "active"}
-                    onDragStart={(event) => {
-                      event.dataTransfer.setData("text/plain", String(index));
-                      setDragSource(index);
-                    }}
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData("text/plain", String(index));
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setDragImage(createEmptyDragImage(), 0, 0);
+                    setDragSource(index);
+                  }}
                     onDragEnd={() => setDragSource(null)}
                     className={[
                       "gc-piece flex h-[72%] w-[72%] items-center justify-center border-2 border-[var(--gc-ink)] text-xl font-black shadow-[0_8px_18px_rgba(0,0,0,0.18)]",
                       piece.color === "red"
                         ? "bg-[var(--gc-piece-dark)] text-[var(--gc-piece-light)]"
                         : "bg-[var(--gc-piece-light)] text-[var(--gc-piece-dark)]",
-                      dragSource === index ? "scale-110 cursor-grab" : "cursor-grab",
+                      dragSource === index ? "opacity-0 cursor-none" : "cursor-grab",
                     ].join(" ")}
                   >
                     {piece.king ? "K" : ""}
@@ -213,4 +235,39 @@ function formatSeconds(totalSeconds: number) {
 
 function labelForColor(color: CheckersColor) {
   return color === "red" ? "Red" : "Black";
+}
+
+function createEmptyDragImage() {
+  const image = document.createElement("canvas");
+  image.width = 1;
+  image.height = 1;
+  return image;
+}
+
+function MoveFeedback({ message }: { message: string | null }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[var(--gc-ink)] shadow-[var(--gc-card-shadow)]">
+      {message}
+    </div>
+  );
+}
+
+function TurnBadge({ side }: { side: CheckersColor }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-4 py-3">
+      <span
+        className={[
+          "h-5 w-5 rounded-full border-2 border-[var(--gc-ink)]",
+          side === "red" ? "bg-[var(--gc-piece-dark)]" : "bg-[var(--gc-piece-light)]",
+        ].join(" ")}
+      />
+      <span className="text-xs font-black uppercase tracking-[0.16em]">
+        {labelForColor(side)} move
+      </span>
+    </div>
+  );
 }

@@ -37,12 +37,22 @@ export function ChessGame() {
   const [timers, setTimers] = useState<Timers>(initialTimers);
   const [history, setHistory] = useState<string[]>([]);
   const [dragSource, setDragSource] = useState<Square | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
 
   const game = useMemo(() => new Chess(fen), [fen]);
   const board = game.board();
   const turn = game.turn() === "w" ? "white" : "black";
   const pieceSet = getActiveChessPieceSet();
+
+  useEffect(() => {
+    if (!feedback) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setFeedback(null), 1800);
+    return () => window.clearTimeout(timeout);
+  }, [feedback]);
 
   useEffect(() => {
     if (status.type !== "active") {
@@ -83,6 +93,7 @@ export function ChessGame() {
     if (!piece || piece.color !== game.turn()) {
       setSelected(null);
       setLegalTargets([]);
+      setFeedback(piece ? "Wrong color. It is " + turn + " to move." : "No piece selected.");
       return;
     }
 
@@ -96,6 +107,7 @@ export function ChessGame() {
     const move = next.move({ from, to, promotion: "q" });
     if (!move) {
       setStatus({ type: "active", message: "Illegal move" });
+      setFeedback("Illegal move.");
       setSelected(null);
       setLegalTargets([]);
       return;
@@ -120,7 +132,8 @@ export function ChessGame() {
   }
 
   return (
-    <div className="grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+    <div className="relative grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+      <MoveFeedback message={feedback} />
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -129,13 +142,14 @@ export function ChessGame() {
             </p>
             <p className="mt-1 text-lg font-semibold">{status.message}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <TurnBadge side={turn} />
             <TimerCard label="White" active={turn === "white" && status.type === "active"} seconds={timers.white} />
             <TimerCard label="Black" active={turn === "black" && status.type === "active"} seconds={timers.black} />
           </div>
         </div>
 
-        <div className="gc-board grid aspect-square grid-cols-8 overflow-hidden border-4 border-[var(--gc-ink)] bg-[var(--gc-board-light)] p-1 [box-shadow:var(--gc-board-shadow)]">
+        <div className={["gc-board grid aspect-square grid-cols-8 overflow-hidden border-4 border-[var(--gc-ink)] bg-[var(--gc-board-light)] p-1 [box-shadow:var(--gc-board-shadow)]", dragSource ? "cursor-none" : ""].join(" ")}>
           {board.flatMap((row, rowIndex) =>
             row.map((piece, colIndex) => {
               const square = (String.fromCharCode(97 + colIndex) + String(8 - rowIndex)) as Square;
@@ -170,19 +184,24 @@ export function ChessGame() {
                   {piece ? (
                     <span
                       draggable={status.type === "active" && piece.color === game.turn()}
-                      onDragStart={(event) => {
-                        event.dataTransfer.setData("text/plain", square);
-                        setDragSource(square);
-                      }}
-                      onDragEnd={() => setDragSource(null)}
-                      className={dragSource === square ? "scale-110 cursor-grab" : "cursor-grab"}
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData("text/plain", square);
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setDragImage(createEmptyDragImage(), 0, 0);
+                    setDragSource(square);
+                  }}
+                  onDragEnd={() => setDragSource(null)}
+                      className={[
+                        "flex h-full w-full items-center justify-center",
+                        dragSource === square ? "opacity-0 cursor-none" : "cursor-grab",
+                      ].join(" ")}
                     >
                       <Image
                         src={resolveChessPieceAsset(pieceSet, piece.color, piece.type)}
                         alt={(piece.color === "w" ? "White " : "Black ") + pieceNameMap[piece.type]}
-                        width={72}
-                        height={72}
-                        className="h-[74%] w-[74%] object-contain drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)]"
+                        width={96}
+                        height={96}
+                        className="block h-[88%] w-[88%] object-contain object-center drop-shadow-[0_6px_10px_rgba(0,0,0,0.35)] [image-rendering:auto]"
                         priority={rowIndex < 2 || rowIndex > 5}
                       />
                     </span>
@@ -271,10 +290,9 @@ function resolveChessPieceAsset(
   color: "w" | "b",
   type: keyof typeof pieceNameMap,
 ) {
-  const side = color === "w" ? "white" : "black";
-
   if (pieceSet === "arcade") {
-    return "/assets/chess/set-arcade/chess_piece_2_" + side + "_" + pieceNameMap[type] + ".png";
+    const sideKey = color === "w" ? "w" : "b";
+    return "/assets/chess/classic/" + sideKey + type + ".png";
   }
 
   const suffix = pieceSet === "midnight" ? "2" : "3";
@@ -292,6 +310,41 @@ function resolveChessPieceAsset(
               : "king";
   const sideKey = color === "w" ? "W" : "B";
   return "/assets/chess/set-" + pieceSet + "/" + pieceKey + sideKey + suffix + ".png";
+}
+
+function createEmptyDragImage() {
+  const image = document.createElement("canvas");
+  image.width = 1;
+  image.height = 1;
+  return image;
+}
+
+function MoveFeedback({ message }: { message: string | null }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[var(--gc-ink)] shadow-[var(--gc-card-shadow)]">
+      {message}
+    </div>
+  );
+}
+
+function TurnBadge({ side }: { side: "white" | "black" }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-4 py-3">
+      <span
+        className={[
+          "h-5 w-5 rounded-full border-2 border-[var(--gc-ink)]",
+          side === "white" ? "bg-[var(--gc-piece-light)]" : "bg-[var(--gc-piece-dark)]",
+        ].join(" ")}
+      />
+      <span className="text-xs font-black uppercase tracking-[0.16em]">
+        {side} move
+      </span>
+    </div>
+  );
 }
 
 function TimerCard(props: { label: string; seconds: number; active: boolean }) {
