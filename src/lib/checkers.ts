@@ -40,7 +40,7 @@ export function createInitialCheckersState(): CheckersState {
     selected: null,
     legalMoves: getLegalMoves(board, "red"),
     mustContinueFrom: null,
-    status: { type: "active", message: "Red to move" },
+    status: { type: "active", message: "Dark to move" },
     winner: null,
     history: ["Game started"],
     lastMove: null,
@@ -246,7 +246,7 @@ function countPieces(board: CheckersBoard, color: CheckersColor) {
 }
 
 function labelForColor(color: CheckersColor) {
-  return color === "red" ? "Red" : "Black";
+  return color === "red" ? "Dark" : "Light";
 }
 
 function describeCheckersMove(color: CheckersColor, move: CheckersMove, promoted: boolean) {

@@ -134,7 +134,7 @@ export function RpsGame() {
           </div>
         </div>
 
-        <div className="gc-panel grid gap-5 p-5 md:grid-cols-[1fr_11rem_1fr] md:items-center">
+        <div className="gc-panel grid gap-2 p-5 md:grid-cols-[1fr_11rem_1fr] md:items-center">
           <RoundCard label="You chose" throwValue={playerThrow} />
           <div className="order-first flex min-h-40 flex-col items-center justify-center rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-strong)] px-4 py-6 text-center md:order-none">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--gc-muted)]">Battlezone</p>

@@ -109,7 +109,8 @@ export function TicTacToeGame() {
           </div>
         </div>
 
-        <div className="gc-board mx-auto grid aspect-square w-full max-w-[42rem] grid-cols-3 gap-3 rounded-[calc(var(--gc-radius)+0.4rem)] border-4 border-[var(--gc-ink)] bg-[var(--gc-panel-soft)] p-3 [box-shadow:var(--gc-board-shadow)]">
+        <div className="gc-board relative mx-auto grid aspect-square w-full max-w-[42rem] grid-cols-3 gap-3 rounded-[calc(var(--gc-radius)+0.4rem)] border-4 border-[var(--gc-ink)] bg-[var(--gc-panel-soft)] p-3 [box-shadow:var(--gc-board-shadow)]">
+          {winningLine ? <WinningLineOverlay line={winningLine} /> : null}
           {board.map((cell, index) => {
             const highlighted = winningLine?.includes(index);
             return (
@@ -118,7 +119,7 @@ export function TicTacToeGame() {
                 type="button"
                 onClick={() => handleSelect(index)}
                 className={[
-                  "flex aspect-square items-center justify-center rounded-[calc(var(--gc-radius)-0.2rem)] border-2 border-[var(--gc-ink)] transition sm:hover:-translate-y-1",
+                  "group relative flex aspect-square items-center justify-center rounded-[calc(var(--gc-radius)-0.2rem)] border-2 border-[var(--gc-ink)] transition sm:hover:-translate-y-1",
                   highlighted
                     ? "bg-[var(--gc-panel-accent-soft)]"
                     : "bg-[var(--gc-panel-float)]",
@@ -166,7 +167,11 @@ function ScoreChip({ label, value }: { label: string; value: number }) {
 function Mark({ cell }: { cell: Cell }) {
   if (cell === "X") {
     return (
-      <svg viewBox="0 0 100 100" className="h-[78%] w-[78%]" aria-hidden="true">
+      <svg
+        viewBox="0 0 100 100"
+        className="h-[78%] w-[78%] transition duration-150 group-hover:scale-105 group-hover:rotate-2"
+        aria-hidden="true"
+      >
         <path
           d="M22 22 L78 78 M78 22 L22 78"
           stroke="var(--gc-accent-strong)"
@@ -179,7 +184,11 @@ function Mark({ cell }: { cell: Cell }) {
 
   if (cell === "O") {
     return (
-      <svg viewBox="0 0 100 100" className="h-[74%] w-[74%]" aria-hidden="true">
+      <svg
+        viewBox="0 0 100 100"
+        className="h-[74%] w-[74%] transition duration-150 group-hover:scale-105"
+        aria-hidden="true"
+      >
         <circle
           cx="50"
           cy="50"
@@ -193,6 +202,41 @@ function Mark({ cell }: { cell: Cell }) {
   }
 
   return null;
+}
+
+function WinningLineOverlay({ line }: { line: number[] }) {
+  const positions = [
+    { x: 16.6667, y: 16.6667 },
+    { x: 50, y: 16.6667 },
+    { x: 83.3333, y: 16.6667 },
+    { x: 16.6667, y: 50 },
+    { x: 50, y: 50 },
+    { x: 83.3333, y: 50 },
+    { x: 16.6667, y: 83.3333 },
+    { x: 50, y: 83.3333 },
+    { x: 83.3333, y: 83.3333 },
+  ];
+  const start = positions[line[0]];
+  const end = positions[line[2]];
+
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className="pointer-events-none absolute inset-3 z-10 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] overflow-visible"
+      aria-hidden="true"
+    >
+      <line
+        x1={start.x}
+        y1={start.y}
+        x2={end.x}
+        y2={end.y}
+        stroke="var(--gc-accent)"
+        strokeWidth="6"
+        strokeLinecap="round"
+        className="drop-shadow-[0_0_12px_color-mix(in_srgb,var(--gc-accent)_55%,transparent)]"
+      />
+    </svg>
+  );
 }
 
 function resolveBoard(board: Cell[]): Exclude<Winner, null> | null {

@@ -78,6 +78,7 @@ export function GameShell({ game, children, insights = defaultInsights, feedback
 
           <div className="grid gap-6">
             <div className="gc-panel p-5">{children}</div>
+            {feedback ? <div className="gc-panel p-5">{feedback}</div> : null}
             <div className="grid gap-4 xl:grid-cols-3">
               <div className="gc-panel p-5">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
@@ -104,7 +105,6 @@ export function GameShell({ game, children, insights = defaultInsights, feedback
                 </p>
               </div>
             </div>
-            {feedback ? <div className="gc-panel p-5">{feedback}</div> : null}
           </div>
         </div>
       </section>

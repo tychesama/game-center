@@ -16,7 +16,7 @@ export function GameCard({ game }: { game: Game }) {
           <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[var(--gc-accent-strong)]">
             {game.eyebrow}
           </p>
-          <h2 className="mt-2 text-4xl font-black tracking-[-0.06em]">
+          <h2 className="gc-midnight-stroke mt-2 text-4xl font-black tracking-[-0.06em]">
             {game.title}
           </h2>
           <p className="mt-3 max-w-xl text-sm font-semibold leading-6 text-[var(--gc-muted)]">
