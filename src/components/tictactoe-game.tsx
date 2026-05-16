@@ -109,7 +109,7 @@ export function TicTacToeGame() {
           </div>
         </div>
 
-        <div className="gc-board mx-auto grid aspect-square w-full max-w-[42rem] grid-cols-3 gap-3 rounded-[calc(var(--gc-radius)+0.4rem)] border-4 border-[var(--gc-ink)] bg-[color:color-mix(in_srgb,var(--gc-surface)_70%,white)] p-3 [box-shadow:var(--gc-board-shadow)]">
+        <div className="gc-board mx-auto grid aspect-square w-full max-w-[42rem] grid-cols-3 gap-3 rounded-[calc(var(--gc-radius)+0.4rem)] border-4 border-[var(--gc-ink)] bg-[var(--gc-panel-soft)] p-3 [box-shadow:var(--gc-board-shadow)]">
           {board.map((cell, index) => {
             const highlighted = winningLine?.includes(index);
             return (
@@ -118,15 +118,13 @@ export function TicTacToeGame() {
                 type="button"
                 onClick={() => handleSelect(index)}
                 className={[
-                  "flex aspect-square items-center justify-center rounded-[calc(var(--gc-radius)-0.2rem)] border-2 border-[var(--gc-ink)] text-6xl font-black transition sm:text-7xl",
+                  "flex aspect-square items-center justify-center rounded-[calc(var(--gc-radius)-0.2rem)] border-2 border-[var(--gc-ink)] transition sm:hover:-translate-y-1",
                   highlighted
-                    ? "bg-[color:color-mix(in_srgb,var(--gc-accent)_26%,white)]"
-                    : "bg-[color:color-mix(in_srgb,var(--gc-surface)_92%,white)] hover:-translate-y-1",
+                    ? "bg-[var(--gc-panel-accent-soft)]"
+                    : "bg-[var(--gc-panel-float)]",
                 ].join(" ")}
               >
-                <span className={cell === "X" ? "text-[var(--gc-accent-strong)]" : "text-[var(--gc-ink)]"}>
-                  {cell}
-                </span>
+                <Mark cell={cell} />
               </button>
             );
           })}
@@ -158,11 +156,43 @@ export function TicTacToeGame() {
 
 function ScoreChip({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-[color:color-mix(in_srgb,var(--gc-surface-strong)_70%,white)] px-4 py-4">
+    <div className="rounded-2xl bg-[var(--gc-panel-strong)] px-4 py-4">
       <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{label}</p>
       <p className="mt-2 text-3xl font-black">{value}</p>
     </div>
   );
+}
+
+function Mark({ cell }: { cell: Cell }) {
+  if (cell === "X") {
+    return (
+      <svg viewBox="0 0 100 100" className="h-[78%] w-[78%]" aria-hidden="true">
+        <path
+          d="M22 22 L78 78 M78 22 L22 78"
+          stroke="var(--gc-accent-strong)"
+          strokeWidth="14"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (cell === "O") {
+    return (
+      <svg viewBox="0 0 100 100" className="h-[74%] w-[74%]" aria-hidden="true">
+        <circle
+          cx="50"
+          cy="50"
+          r="28"
+          stroke="var(--gc-ink)"
+          strokeWidth="14"
+          fill="none"
+        />
+      </svg>
+    );
+  }
+
+  return null;
 }
 
 function resolveBoard(board: Cell[]): Exclude<Winner, null> | null {

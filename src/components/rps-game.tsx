@@ -1,15 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import confetti from "canvas-confetti";
 import { useEffect, useRef, useState } from "react";
 
 type Throw = "rock" | "paper" | "scissors";
 
 const throws: Throw[] = ["rock", "paper", "scissors"];
-const icons: Record<Throw, string> = {
+const labels: Record<Throw, string> = {
   rock: "Rock",
   paper: "Paper",
   scissors: "Scissors",
+};
+const icons: Record<Throw, string> = {
+  rock: "/assets/rps/rock.svg",
+  paper: "/assets/rps/paper.svg",
+  scissors: "/assets/rps/scissors.svg",
 };
 
 export function RpsGame() {
@@ -17,7 +23,20 @@ export function RpsGame() {
   const [botThrow, setBotThrow] = useState<Throw | null>(null);
   const [status, setStatus] = useState("Choose your throw");
   const [score, setScore] = useState({ player: 0, bot: 0, draw: 0 });
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const pendingResult = useRef<{ throw: Throw; result: ReturnType<typeof resolveRound> } | null>(null);
+  const countdownTimeouts = useRef<number[]>([]);
+  const revealTimeout = useRef<number | null>(null);
   const celebrationKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      countdownTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
+      if (revealTimeout.current !== null) {
+        window.clearTimeout(revealTimeout.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!playerThrow || !botThrow) {
@@ -37,27 +56,63 @@ export function RpsGame() {
   }, [botThrow, playerThrow]);
 
   function playRound(choice: Throw) {
+    if (countdown !== null) {
+      return;
+    }
+
     const randomThrow = getRandomThrow();
     const result = resolveRound(choice, randomThrow);
 
     setPlayerThrow(choice);
-    setBotThrow(randomThrow);
-    setScore((current) => ({
-      ...current,
-      [result]: current[result] + 1,
-    }));
-    setStatus(
-      result === "player"
-        ? "You win the round"
-        : result === "bot"
-          ? "Arcade bot wins the round"
-          : "Draw round",
-    );
+    setBotThrow(null);
+    pendingResult.current = { throw: randomThrow, result };
+    setCountdown(3);
+    setStatus("Bot reveal in 3");
+    countdownTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
+    countdownTimeouts.current = [
+      window.setTimeout(() => setCountdown(2), 1000),
+      window.setTimeout(() => setCountdown(1), 2000),
+    ];
+    if (revealTimeout.current !== null) {
+      window.clearTimeout(revealTimeout.current);
+    }
+
+    revealTimeout.current = window.setTimeout(() => {
+      const pending = pendingResult.current;
+      if (!pending) {
+        return;
+      }
+
+      setCountdown(null);
+      setBotThrow(pending.throw);
+      setScore((currentScore) => ({
+        ...currentScore,
+        [pending.result]: currentScore[pending.result] + 1,
+      }));
+      setStatus(
+        pending.result === "player"
+          ? "You win the round"
+          : pending.result === "bot"
+            ? "Arcade bot wins the round"
+            : "Draw round",
+      );
+      pendingResult.current = null;
+      revealTimeout.current = null;
+      countdownTimeouts.current = [];
+    }, 3000);
   }
 
   function resetScore() {
+    countdownTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
+    countdownTimeouts.current = [];
+    if (revealTimeout.current !== null) {
+      window.clearTimeout(revealTimeout.current);
+      revealTimeout.current = null;
+    }
+    pendingResult.current = null;
     setPlayerThrow(null);
     setBotThrow(null);
+    setCountdown(null);
     setStatus("Choose your throw");
     setScore({ player: 0, bot: 0, draw: 0 });
     celebrationKey.current = null;
@@ -76,7 +131,7 @@ export function RpsGame() {
             </p>
           </div>
           <div className="rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] px-4 py-3 text-xs font-black uppercase tracking-[0.16em]">
-            Randomizer bot
+            Arcade bot
           </div>
         </div>
 
@@ -86,9 +141,20 @@ export function RpsGame() {
               key={choice}
               type="button"
               onClick={() => playRound(choice)}
-              className="gc-panel flex min-h-44 flex-col items-center justify-center gap-4 p-6 text-center transition hover:-translate-y-1"
+              disabled={countdown !== null}
+              className="gc-panel flex min-h-44 flex-col items-center justify-center gap-4 p-6 text-center transition hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <span className="text-4xl font-black uppercase tracking-[-0.06em]">{icons[choice]}</span>
+              <span className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-[var(--gc-panel-float)] p-4">
+                <Image
+                  src={icons[choice]}
+                  alt={labels[choice]}
+                  fill={false}
+                  width={72}
+                  height={72}
+                  className="h-full w-full object-contain"
+                />
+              </span>
+              <span className="text-2xl font-black uppercase tracking-[-0.06em]">{labels[choice]}</span>
               <span className="rounded-full bg-[var(--gc-accent)] px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-accent-ink)]">
                 Throw
               </span>
@@ -96,9 +162,10 @@ export function RpsGame() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <RoundCard label="You played" value={playerThrow ? icons[playerThrow] : "Waiting"} />
-          <RoundCard label="Bot played" value={botThrow ? icons[botThrow] : "Waiting"} />
+        <div className="grid gap-4 md:grid-cols-3">
+          <RoundCard label="You played" throwValue={playerThrow} />
+          <RoundCard label="Countdown" value={countdown !== null ? String(countdown) : "Ready"} />
+          <RoundCard label="Bot played" throwValue={botThrow} />
         </div>
       </section>
 
@@ -125,18 +192,34 @@ export function RpsGame() {
   );
 }
 
-function RoundCard({ label, value }: { label: string; value: string }) {
+function RoundCard(props: { label: string; value?: string; throwValue?: Throw | null }) {
   return (
     <div className="gc-panel p-5">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{label}</p>
-      <p className="mt-3 text-3xl font-black">{value}</p>
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{props.label}</p>
+      {props.throwValue ? (
+        <div className="mt-3 flex items-center gap-4">
+          <span className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--gc-panel-float)] p-3">
+            <Image
+              src={icons[props.throwValue]}
+              alt={labels[props.throwValue]}
+              fill={false}
+              width={48}
+              height={48}
+              className="h-full w-full object-contain"
+            />
+          </span>
+          <p className="text-2xl font-black">{labels[props.throwValue]}</p>
+        </div>
+      ) : (
+        <p className="mt-3 text-3xl font-black">{props.value ?? "Waiting"}</p>
+      )}
     </div>
   );
 }
 
 function ScoreChip({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-[color:color-mix(in_srgb,var(--gc-surface-strong)_70%,white)] px-4 py-4">
+    <div className="rounded-2xl bg-[var(--gc-panel-strong)] px-4 py-4">
       <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">{label}</p>
       <p className="mt-2 text-3xl font-black">{value}</p>
     </div>

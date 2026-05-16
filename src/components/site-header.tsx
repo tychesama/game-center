@@ -27,7 +27,7 @@ export function SiteHeader() {
             </span>
             <span className="text-2xl font-black tracking-[0]">GameCenter</span>
           </Link>
-          <span className="rounded-full border border-[color:color-mix(in_srgb,var(--gc-ink)_20%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_92%,white)] px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--gc-muted)]">
+          <span className="rounded-full border border-[color:color-mix(in_srgb,var(--gc-ink)_20%,transparent)] bg-[var(--gc-panel-float)] px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--gc-muted)]">
             Phase 2
           </span>
         </div>

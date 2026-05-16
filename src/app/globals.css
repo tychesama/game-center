@@ -19,6 +19,11 @@
   --gc-font-display: var(--font-bricolage);
   --gc-board-shadow: 8px 8px 0 var(--gc-ink);
   --gc-card-shadow: 8px 8px 0 var(--gc-ink);
+  --gc-mix-base: white;
+  --gc-panel-soft: color-mix(in srgb, var(--gc-surface) 88%, var(--gc-mix-base));
+  --gc-panel-strong: color-mix(in srgb, var(--gc-surface-strong) 70%, var(--gc-mix-base));
+  --gc-panel-float: color-mix(in srgb, var(--gc-surface) 96%, var(--gc-mix-base));
+  --gc-panel-accent-soft: color-mix(in srgb, var(--gc-accent) 18%, var(--gc-mix-base));
 }
 
 @theme inline {
@@ -43,6 +48,16 @@ body {
     var(--gc-background);
   color: var(--gc-ink);
   font-family: var(--gc-font-display), ui-sans-serif, sans-serif;
+}
+
+:root[data-theme-preset="midnight"] {
+  --gc-surface: #172541;
+  --gc-surface-strong: #22355a;
+  --gc-muted: #f0f6ff;
+  --gc-button-bg: #6cf0ff;
+  --gc-button-fg: #08111f;
+  --gc-card-shadow: 0 18px 40px rgba(4, 9, 20, 0.42);
+  --gc-mix-base: #08111f;
 }
 
 a {
@@ -185,7 +200,7 @@ button {
 .gc-header-control {
   border: 2px solid color-mix(in srgb, var(--gc-ink) 22%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--gc-surface) 88%, white);
+  background: var(--gc-panel-soft);
   color: var(--gc-ink);
   display: inline-flex;
   align-items: center;
@@ -211,5 +226,5 @@ button {
   background:
     radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--gc-accent) 45%, transparent), transparent 28%),
     radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--gc-board-dark) 25%, transparent), transparent 28%),
-    linear-gradient(135deg, color-mix(in srgb, var(--gc-surface) 95%, white), color-mix(in srgb, var(--gc-background) 88%, white));
+    linear-gradient(135deg, var(--gc-panel-float), color-mix(in srgb, var(--gc-background) 88%, var(--gc-mix-base)));
 }

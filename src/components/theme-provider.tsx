@@ -38,6 +38,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.dataset.buttonStyle = theme.buttonStyle;
     root.dataset.boardStyle = theme.boardStyle;
     root.dataset.pieceStyle = theme.pieceStyle;
+    root.dataset.themePreset = theme.name;
     window.localStorage.setItem(storageKey, theme.name);
   }, [themeName]);
 

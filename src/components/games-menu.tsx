@@ -48,7 +48,7 @@ export function GamesMenu() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 min-w-72 rounded-[calc(var(--gc-radius)-0.2rem)] border border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_96%,white)] p-2 shadow-[var(--gc-card-shadow)]">
+        <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 min-w-72 rounded-[calc(var(--gc-radius)-0.2rem)] border border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[var(--gc-panel-float)] p-2 shadow-[var(--gc-card-shadow)]">
           {games.map((game) => {
             const active = pathname.startsWith(game.href);
             return (
@@ -59,8 +59,8 @@ export function GamesMenu() {
                 className={[
                   "block rounded-2xl px-4 py-3 transition",
                   active
-                    ? "bg-[color:color-mix(in_srgb,var(--gc-accent)_18%,white)]"
-                    : "hover:bg-[color:color-mix(in_srgb,var(--gc-surface-strong)_70%,white)]",
+                    ? "bg-[var(--gc-panel-accent-soft)]"
+                    : "hover:bg-[var(--gc-panel-strong)]",
                 ].join(" ")}
               >
                 <span className="block text-sm font-black uppercase tracking-[0.14em]">

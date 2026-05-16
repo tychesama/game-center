@@ -42,7 +42,7 @@ export const games: Game[] = [
     eyebrow: "Pocket duel",
     description:
       "Fast solo rounds against an arcade bot with turn logic, win checks, and instant rematches.",
-    players: "1 player vs bot",
+    players: "1 PLAYER vs BOT",
     status: "Playable",
     href: "/tictactoe",
     theme: gameThemes.tictactoe,
@@ -53,7 +53,7 @@ export const games: Game[] = [
     eyebrow: "Lucky throw",
     description:
       "Quick best-of chaos against a randomizing arcade rival with score tracking and round feedback.",
-    players: "1 player vs randomizer",
+    players: "1 PLAYER vs BOT",
     status: "Playable",
     href: "/rps",
     theme: gameThemes.rps,

@@ -177,10 +177,10 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                   "relative flex aspect-square items-center justify-center transition",
                   dark ? "bg-[var(--gc-board-dark)]" : "bg-[var(--gc-board-light)]",
                   selected ? "ring-4 ring-[var(--gc-accent)] ring-inset" : "",
-                  target ? "after:absolute after:h-4 after:w-4 after:rounded-full after:bg-[color:color-mix(in_srgb,var(--gc-accent)_70%,white)] after:content-['']" : "",
+                  target ? "after:absolute after:h-4 after:w-4 after:rounded-full after:bg-[var(--gc-accent)] after:content-['']" : "",
                 ].join(" ")}
               >
-                <span className="absolute left-1 top-1 font-mono text-[10px] font-bold uppercase text-[color:color-mix(in_srgb,var(--gc-ink)_40%,white)]">
+                <span className="absolute left-1 top-1 font-mono text-[10px] font-bold uppercase text-[color:color-mix(in_srgb,var(--gc-ink)_55%,transparent)]">
                   {String.fromCharCode(97 + col)}
                   {8 - row}
                 </span>
@@ -234,7 +234,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
             .map((entry, index) => (
               <li
                 key={entry + String(index)}
-                className="rounded-2xl bg-[color:color-mix(in_srgb,var(--gc-surface-strong)_70%,white)] px-4 py-3 font-semibold"
+                className="rounded-2xl bg-[var(--gc-panel-strong)] px-4 py-3 font-semibold"
               >
                 {entry}
               </li>
@@ -251,8 +251,8 @@ function TimerCard(props: { label: string; seconds: number; active: boolean }) {
       className={[
         "rounded-2xl border px-4 py-3 text-center",
         props.active
-          ? "border-[var(--gc-accent)] bg-[color:color-mix(in_srgb,var(--gc-accent)_18%,white)]"
-          : "border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_88%,white)]",
+          ? "border-[var(--gc-accent)] bg-[var(--gc-panel-accent-soft)]"
+          : "border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[var(--gc-panel-soft)]",
       ].join(" ")}
     >
       <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--gc-muted)]">
