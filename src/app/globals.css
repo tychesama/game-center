@@ -248,6 +248,23 @@ button {
   display: none;
 }
 
+.gc-theme-menu-item {
+  width: 100%;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.25rem;
+  text-transform: uppercase;
+  transition: background-color 180ms ease;
+}
+
+.gc-theme-menu-item:hover {
+  background: var(--gc-panel-accent-soft);
+}
+
 .gc-rps-icon {
   background:
     linear-gradient(135deg, var(--gc-accent), var(--gc-accent-strong));
