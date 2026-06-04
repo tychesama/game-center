@@ -80,7 +80,7 @@ export function RpsGame() {
       }, 1000),
       window.setTimeout(() => {
         setCountdown(1);
-        playSound("rpsCountTwo");
+        playSound("rpsCountOne");
       }, 2000),
     ];
     if (revealTimeout.current !== null) {

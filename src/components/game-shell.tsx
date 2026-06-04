@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import type React from "react";
 
 import type { Game } from "@/lib/games";
+import { useSoundEffects } from "@/lib/use-sound-effects";
 
 type GameShellProps = {
   game: Game;
@@ -22,6 +25,8 @@ const defaultInsights = {
 };
 
 export function GameShell({ game, children, insights = defaultInsights, feedback }: GameShellProps) {
+  const playSound = useSoundEffects();
+
   return (
     <main
       data-game-theme={game.theme.name}
@@ -70,7 +75,12 @@ export function GameShell({ game, children, insights = defaultInsights, feedback
                   <p className="mt-2 text-base font-black">Local</p>
                 </div>
               </div>
-              <Link href="/" className="gc-button mt-3">
+              <Link
+                href="/"
+                className="gc-button mt-3"
+                onClick={() => playSound("click")}
+                onMouseEnter={() => playSound("hover")}
+              >
                 Back to lobby
               </Link>
             </div>

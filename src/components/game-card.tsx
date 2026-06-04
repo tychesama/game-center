@@ -1,13 +1,20 @@
+"use client";
+
 import Link from "next/link";
 
 import type { Game } from "@/lib/games";
 import { themeStyle } from "@/lib/themes";
+import { useSoundEffects } from "@/lib/use-sound-effects";
 
 export function GameCard({ game }: { game: Game }) {
+  const playSound = useSoundEffects();
+
   return (
     <Link
       href={game.href}
       style={themeStyle(game.theme)}
+      onClick={() => playSound("click")}
+      onMouseEnter={() => playSound("hover")}
       className="group relative overflow-hidden rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] p-5 shadow-[8px_8px_0_var(--gc-ink)] transition duration-200 hover:-translate-y-1 hover:shadow-[12px_12px_0_var(--gc-ink)]"
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--gc-accent)] opacity-70 transition group-hover:scale-125" />

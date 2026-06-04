@@ -6,16 +6,18 @@ import { useState } from "react";
 
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { games } from "@/lib/games";
+import { useSoundEffects } from "@/lib/use-sound-effects";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [gamesOpen, setGamesOpen] = useState(false);
+  const playSound = useSoundEffects();
 
   return (
     <header className="sticky top-0 z-30 border-b border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_76%,var(--gc-background))] backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-3 sm:px-10 lg:px-16">
         <div className="flex flex-wrap items-center gap-3">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3" onClick={() => playSound("click")}>
             <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] shadow-[4px_4px_0_var(--gc-ink)]">
               <svg
                 aria-hidden="true"
@@ -40,6 +42,8 @@ export function SiteHeader() {
           <Link
             href="/"
             className="gc-header-control gc-header-button px-4"
+            onClick={() => playSound("click")}
+            onMouseEnter={() => playSound("hover")}
           >
             Lobby
           </Link>
@@ -56,6 +60,8 @@ export function SiteHeader() {
                   : "",
               ].join(" ")}
               aria-label="Open games menu"
+              onClick={() => playSound("click")}
+              onMouseEnter={() => playSound("hover")}
             >
               Games
               <span aria-hidden="true" className="text-sm leading-none">▾</span>
@@ -70,7 +76,11 @@ export function SiteHeader() {
                   <Link
                     key={game.slug}
                     href={game.href}
-                    onClick={() => setGamesOpen(false)}
+                    onClick={() => {
+                      playSound("click");
+                      setGamesOpen(false);
+                    }}
+                    onMouseEnter={() => playSound("hover")}
                     className={[
                       "rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.12em] transition hover:bg-[var(--gc-panel-accent-soft)]",
                       active ? "bg-[var(--gc-panel-accent-soft)] text-[var(--gc-ink)]" : "text-[var(--gc-muted)]",
