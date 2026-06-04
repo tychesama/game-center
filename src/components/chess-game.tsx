@@ -43,6 +43,9 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const celebrationKey = useRef<string | null>(null);
+  const feedbackCooldownRef = useRef(false);
+  const feedbackCooldownTimeoutRef = useRef<number | null>(null);
+  const feedbackResetRef = useRef<number | null>(null);
   const playSound = useSoundEffects();
 
   const game = useMemo(() => new Chess(fen), [fen]);
@@ -62,6 +65,40 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     const timeout = window.setTimeout(() => setFeedback(null), 1800);
     return () => window.clearTimeout(timeout);
   }, [feedback, props]);
+
+  useEffect(() => {
+    return () => {
+      if (feedbackResetRef.current !== null) {
+        window.clearTimeout(feedbackResetRef.current);
+      }
+      if (feedbackCooldownTimeoutRef.current !== null) {
+        window.clearTimeout(feedbackCooldownTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function showFeedback(message: string) {
+    if (feedbackCooldownRef.current) {
+      return;
+    }
+
+    feedbackCooldownRef.current = true;
+    feedbackCooldownTimeoutRef.current = window.setTimeout(() => {
+      feedbackCooldownRef.current = false;
+      feedbackCooldownTimeoutRef.current = null;
+    }, 520);
+
+    playSound("error");
+    if (feedbackResetRef.current !== null) {
+      window.clearTimeout(feedbackResetRef.current);
+    }
+
+    setFeedback(null);
+    feedbackResetRef.current = window.setTimeout(() => {
+      setFeedback(message);
+      feedbackResetRef.current = null;
+    }, 40);
+  }
 
   useEffect(() => {
     if (status.type !== "finished" || !status.winner) {
@@ -117,8 +154,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     if (!piece || piece.color !== game.turn()) {
       setSelected(null);
       setLegalTargets([]);
-      playSound("error");
-      setFeedback(piece ? "Wrong color. It is " + turn + " to move." : "No piece selected.");
+      showFeedback(piece ? "Wrong color. It is " + turn + " to move." : "No piece selected.");
       return;
     }
 
@@ -132,8 +168,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     const move = next.move({ from, to, promotion: "q" });
     if (!move) {
       setStatus({ type: "active", message: "Illegal move" });
-      playSound("error");
-      setFeedback("Illegal move.");
+      showFeedback("Illegal move.");
       setSelected(null);
       setLegalTargets([]);
       return;
@@ -219,8 +254,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                       if (valid) {
                         commitMove(from, square);
                       } else {
-                        playSound("error");
-                        setFeedback("Illegal move.");
+                        showFeedback("Illegal move.");
                       }
                     }
                     setDragSource(null);

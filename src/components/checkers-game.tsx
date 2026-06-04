@@ -28,6 +28,9 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
   const [hoverTarget, setHoverTarget] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const celebrationKey = useRef<string | null>(null);
+  const feedbackCooldownRef = useRef(false);
+  const feedbackCooldownTimeoutRef = useRef<number | null>(null);
+  const feedbackResetRef = useRef<number | null>(null);
   const playSound = useSoundEffects();
 
   useEffect(() => {
@@ -70,6 +73,40 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
   }, [feedback, props]);
 
   useEffect(() => {
+    return () => {
+      if (feedbackResetRef.current !== null) {
+        window.clearTimeout(feedbackResetRef.current);
+      }
+      if (feedbackCooldownTimeoutRef.current !== null) {
+        window.clearTimeout(feedbackCooldownTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function showFeedback(message: string) {
+    if (feedbackCooldownRef.current) {
+      return;
+    }
+
+    feedbackCooldownRef.current = true;
+    feedbackCooldownTimeoutRef.current = window.setTimeout(() => {
+      feedbackCooldownRef.current = false;
+      feedbackCooldownTimeoutRef.current = null;
+    }, 520);
+
+    playSound("error");
+    if (feedbackResetRef.current !== null) {
+      window.clearTimeout(feedbackResetRef.current);
+    }
+
+    setFeedback(null);
+    feedbackResetRef.current = window.setTimeout(() => {
+      setFeedback(message);
+      feedbackResetRef.current = null;
+    }, 40);
+  }
+
+  useEffect(() => {
     if (state.status.type !== "win" || !state.status.winner) {
       return;
     }
@@ -93,9 +130,10 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
       const before = state;
       const valid = before.legalMoves.some((move) => move.from === before.selected && move.to === index);
       setState((current) => tryCheckersMove(current, current.selected as number, index));
-      playSound(valid ? "boardgameTap" : "error");
-      if (!valid) {
-        setFeedback("Illegal move.");
+      if (valid) {
+        playSound("boardgameTap");
+      } else {
+        showFeedback("Illegal move.");
       }
       return;
     }
@@ -110,8 +148,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     }
 
     const piece = state.board[index];
-    playSound("error");
-    setFeedback(piece ? "Wrong piece. It is " + labelForColor(state.turn) + " to move." : "No piece selected.");
+    showFeedback(piece ? "Wrong piece. It is " + labelForColor(state.turn) + " to move." : "No piece selected.");
   }
 
   function reset() {
@@ -170,8 +207,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                       playSound("boardgameTap");
                       setState((current) => tryCheckersMove(current, from, index));
                     } else {
-                      playSound("error");
-                      setFeedback("Illegal move.");
+                      showFeedback("Illegal move.");
                     }
                   }
                   setDragSource(null);

@@ -238,6 +238,30 @@ button {
     drop-shadow(0 8px 14px color-mix(in srgb, var(--gc-ink) 28%, transparent));
 }
 
+.gc-feedback-alert {
+  animation: gc-feedback-blink 720ms ease-out;
+}
+
+@keyframes gc-feedback-blink {
+  0%,
+  100% {
+    transform: translateX(0);
+    background: var(--gc-panel-accent-soft);
+  }
+
+  18%,
+  54% {
+    transform: translateX(-3px);
+    background: color-mix(in srgb, var(--gc-accent-strong) 36%, var(--gc-panel-accent-soft));
+  }
+
+  36%,
+  72% {
+    transform: translateX(3px);
+    background: color-mix(in srgb, var(--gc-accent) 58%, var(--gc-panel-accent-soft));
+  }
+}
+
 .gc-lobby-glow {
   background:
     radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--gc-accent) 45%, transparent), transparent 28%),
