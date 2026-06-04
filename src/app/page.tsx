@@ -11,7 +11,7 @@ export default function Home() {
             <p className="gc-chip mb-5 inline-flex">
               Pick a board, start the ritual
             </p>
-            <h1 className="gc-midnight-stroke text-6xl font-black leading-[0.9] tracking-[-0.08em] sm:text-7xl lg:text-8xl">
+            <h1 className="gc-lobby-title gc-midnight-stroke text-6xl font-black leading-[0.9] tracking-[-0.08em] sm:text-7xl lg:text-8xl">
               One lobby for dangerously civilized games.
             </h1>
             <p className="mt-7 max-w-2xl text-lg font-semibold leading-8 text-[var(--gc-muted)]">
