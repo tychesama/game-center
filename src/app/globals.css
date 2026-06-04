@@ -291,28 +291,13 @@ button {
 }
 
 [data-theme-preset="midnight"] .gc-midnight-stroke {
-  -webkit-text-stroke: 1.5px color-mix(in srgb, #08111f 82%, transparent);
+  -webkit-text-stroke: 1px color-mix(in srgb, #071120 72%, transparent);
   text-shadow:
-    0 2px 0 color-mix(in srgb, #08111f 70%, transparent),
-    0 0 14px color-mix(in srgb, var(--gc-accent) 22%, transparent);
+    0 2px 0 color-mix(in srgb, #071120 58%, transparent),
+    0 0 12px color-mix(in srgb, var(--gc-accent) 16%, transparent);
   paint-order: stroke fill;
 }
 
 [data-theme-preset="midnight"] .gc-lobby-title {
-  color: #dff7ff;
-}
-
-[data-theme-preset="midnight"] .gc-select {
-  color: #f8fbff;
-  background-color: transparent;
-}
-
-[data-theme-preset="midnight"] .gc-select option {
-  background-color: #172541;
-  color: #f8fbff;
-}
-
-[data-theme-preset="midnight"] .gc-select option:checked {
-  background-color: #2563eb;
-  color: #ffffff;
+  color: #c8e4ee;
 }

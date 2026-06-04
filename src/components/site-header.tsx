@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { games } from "@/lib/games";
@@ -11,8 +11,24 @@ import { useSoundEffects } from "@/lib/use-sound-effects";
 export function SiteHeader() {
   const pathname = usePathname();
   const [gamesOpen, setGamesOpen] = useState(false);
+  const gamesMenuRef = useRef<HTMLDetailsElement | null>(null);
   const audioMuted = useSyncExternalStore(subscribeToAudioMute, getAudioMuteSnapshot, getAudioMuteServerSnapshot);
   const playSound = useSoundEffects();
+
+  useEffect(() => {
+    if (!gamesOpen) {
+      return;
+    }
+
+    function closeOnOutsideClick(event: PointerEvent) {
+      if (!gamesMenuRef.current?.contains(event.target as Node)) {
+        setGamesOpen(false);
+      }
+    }
+
+    window.addEventListener("pointerdown", closeOnOutsideClick);
+    return () => window.removeEventListener("pointerdown", closeOnOutsideClick);
+  }, [gamesOpen]);
 
   function toggleAudio() {
     const nextMuted = !audioMuted;
@@ -66,6 +82,7 @@ export function SiteHeader() {
             Lobby
           </Link>
           <details
+            ref={gamesMenuRef}
             className="gc-games-menu relative"
             open={gamesOpen}
             onToggle={(event) => setGamesOpen(event.currentTarget.open)}

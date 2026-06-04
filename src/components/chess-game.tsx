@@ -63,7 +63,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     }
 
     props.onFeedbackChange?.(feedback);
-    const timeout = window.setTimeout(() => setFeedback(null), 4000);
+    const timeout = window.setTimeout(() => setFeedback(null), 2500);
     return () => window.clearTimeout(timeout);
   }, [feedback, props]);
 
