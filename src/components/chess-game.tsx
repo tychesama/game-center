@@ -42,6 +42,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const [hoverTarget, setHoverTarget] = useState<Square | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
+  const [clockStarted, setClockStarted] = useState(false);
   const celebrationKey = useRef<string | null>(null);
   const feedbackCooldownRef = useRef(false);
   const feedbackCooldownTimeoutRef = useRef<number | null>(null);
@@ -62,7 +63,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     }
 
     props.onFeedbackChange?.(feedback);
-    const timeout = window.setTimeout(() => setFeedback(null), 1800);
+    const timeout = window.setTimeout(() => setFeedback(null), 13000);
     return () => window.clearTimeout(timeout);
   }, [feedback, props]);
 
@@ -116,7 +117,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   }, [history.length, playSound, status]);
 
   useEffect(() => {
-    if (status.type !== "active") {
+    if (status.type !== "active" || !clockStarted) {
       return;
     }
 
@@ -138,7 +139,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [status.type, turn, moveCount]);
+  }, [clockStarted, status.type, turn, moveCount]);
 
   function handleSquareSelect(square: Square) {
     if (status.type !== "active") {
@@ -177,6 +178,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     playSound("boardgameTap");
     setFen(next.fen());
     setMoveCount((value) => value + 1);
+    setClockStarted(true);
     setSelected(null);
     setLegalTargets([]);
     setHistory((entries) => entries.concat(move.san));
@@ -203,6 +205,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     setLegalTargets([]);
     setHistory([]);
     setMoveCount(0);
+    setClockStarted(false);
     celebrationKey.current = null;
     setTimers(initialTimers);
     setStatus({ type: "active", message: "White to move" });
@@ -222,8 +225,8 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <TurnBadge side={turn} />
-            <TimerCard label="White" active={turn === "white" && status.type === "active"} seconds={timers.white} />
-            <TimerCard label="Black" active={turn === "black" && status.type === "active"} seconds={timers.black} />
+            <TimerCard label="White" active={clockStarted && turn === "white" && status.type === "active"} seconds={timers.white} />
+            <TimerCard label="Black" active={clockStarted && turn === "black" && status.type === "active"} seconds={timers.black} />
           </div>
         </div>
 

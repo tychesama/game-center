@@ -37,6 +37,10 @@ export function useSoundEffects() {
   }, []);
 
   return useCallback((name: SoundName) => {
+    if (window.localStorage.getItem("gamecenter-audio-muted") === "true") {
+      return;
+    }
+
     const audio = audioRefs.current[name];
     if (!audio) {
       return;

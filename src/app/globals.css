@@ -239,26 +239,29 @@ button {
 }
 
 .gc-feedback-alert {
-  animation: gc-feedback-blink 720ms ease-out;
+  animation: gc-feedback-blink 950ms steps(1, end) infinite;
 }
 
 @keyframes gc-feedback-blink {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateX(0);
     background: var(--gc-panel-accent-soft);
+    color: var(--gc-ink);
+    box-shadow: var(--gc-card-shadow);
   }
 
-  18%,
-  54% {
-    transform: translateX(-3px);
-    background: color-mix(in srgb, var(--gc-accent-strong) 36%, var(--gc-panel-accent-soft));
+  25%, 75% {
+    transform: translateX(-4px) scale(1.015);
+    background: var(--gc-accent-strong);
+    color: var(--gc-surface);
+    box-shadow: 0 0 0 4px var(--gc-ink), 0 0 24px color-mix(in srgb, var(--gc-accent-strong) 70%, transparent);
   }
 
-  36%,
-  72% {
-    transform: translateX(3px);
-    background: color-mix(in srgb, var(--gc-accent) 58%, var(--gc-panel-accent-soft));
+  50% {
+    transform: translateX(4px) scale(1.015);
+    background: var(--gc-accent);
+    color: var(--gc-ink);
+    box-shadow: 0 0 0 4px var(--gc-ink), 0 0 24px color-mix(in srgb, var(--gc-accent) 70%, transparent);
   }
 }
 

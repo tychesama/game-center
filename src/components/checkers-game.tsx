@@ -27,6 +27,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
   const [dragSource, setDragSource] = useState<number | null>(null);
   const [hoverTarget, setHoverTarget] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [clockStarted, setClockStarted] = useState(false);
   const celebrationKey = useRef<string | null>(null);
   const feedbackCooldownRef = useRef(false);
   const feedbackCooldownTimeoutRef = useRef<number | null>(null);
@@ -34,7 +35,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
   const playSound = useSoundEffects();
 
   useEffect(() => {
-    if (state.status.type !== "active") {
+    if (state.status.type !== "active" || !clockStarted) {
       return;
     }
 
@@ -59,7 +60,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [state.turn, state.status.type]);
+  }, [clockStarted, state.turn, state.status.type]);
 
   useEffect(() => {
     if (!feedback) {
@@ -68,7 +69,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     }
 
     props.onFeedbackChange?.(feedback);
-    const timeout = window.setTimeout(() => setFeedback(null), 1800);
+    const timeout = window.setTimeout(() => setFeedback(null), 13000);
     return () => window.clearTimeout(timeout);
   }, [feedback, props]);
 
@@ -132,6 +133,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
       setState((current) => tryCheckersMove(current, current.selected as number, index));
       if (valid) {
         playSound("boardgameTap");
+        setClockStarted(true);
       } else {
         showFeedback("Illegal move.");
       }
@@ -155,6 +157,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     playSound("click");
     setState(createInitialCheckersState());
     setTimers(initialTimers);
+    setClockStarted(false);
     celebrationKey.current = null;
   }
 
@@ -172,8 +175,8 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <TurnBadge side={state.turn} />
-            <TimerCard label={labelForColor("red")} active={state.turn === "red" && state.status.type === "active"} seconds={timers.red} />
-            <TimerCard label={labelForColor("black")} active={state.turn === "black" && state.status.type === "active"} seconds={timers.black} />
+            <TimerCard label={labelForColor("red")} active={clockStarted && state.turn === "red" && state.status.type === "active"} seconds={timers.red} />
+            <TimerCard label={labelForColor("black")} active={clockStarted && state.turn === "black" && state.status.type === "active"} seconds={timers.black} />
           </div>
         </div>
 
@@ -205,6 +208,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                     const valid = state.legalMoves.some((move) => move.from === from && move.to === index);
                     if (valid) {
                       playSound("boardgameTap");
+                      setClockStarted(true);
                       setState((current) => tryCheckersMove(current, from, index));
                     } else {
                       showFeedback("Illegal move.");

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { games } from "@/lib/games";
@@ -11,7 +11,17 @@ import { useSoundEffects } from "@/lib/use-sound-effects";
 export function SiteHeader() {
   const pathname = usePathname();
   const [gamesOpen, setGamesOpen] = useState(false);
+  const audioMuted = useSyncExternalStore(subscribeToAudioMute, getAudioMuteSnapshot, getAudioMuteServerSnapshot);
   const playSound = useSoundEffects();
+
+  function toggleAudio() {
+    const nextMuted = !audioMuted;
+    window.localStorage.setItem("gamecenter-audio-muted", String(nextMuted));
+    window.dispatchEvent(new Event("gamecenter-audio-muted-change"));
+    if (!nextMuted) {
+      playSound("click");
+    }
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[color:color-mix(in_srgb,var(--gc-surface)_76%,var(--gc-background))] backdrop-blur">
@@ -39,6 +49,15 @@ export function SiteHeader() {
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-3">
+          <button
+            type="button"
+            className="gc-header-control gc-header-button px-4"
+            aria-pressed={audioMuted}
+            aria-label={audioMuted ? "Unmute audio" : "Mute audio"}
+            onClick={toggleAudio}
+          >
+            {audioMuted ? "Muted" : "Audio"}
+          </button>
           <Link
             href="/"
             className="gc-header-control gc-header-button px-4"
@@ -94,4 +113,22 @@ export function SiteHeader() {
       </div>
     </header>
   );
+}
+
+function subscribeToAudioMute(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener("gamecenter-audio-muted-change", onStoreChange);
+
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener("gamecenter-audio-muted-change", onStoreChange);
+  };
+}
+
+function getAudioMuteSnapshot() {
+  return window.localStorage.getItem("gamecenter-audio-muted") === "true";
+}
+
+function getAudioMuteServerSnapshot() {
+  return false;
 }
