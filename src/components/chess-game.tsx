@@ -6,6 +6,7 @@ import { Chess, type Square } from "chess.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { getActiveChessPieceSet } from "@/lib/themes";
+import { useSoundEffects } from "@/lib/use-sound-effects";
 
 type Timers = {
   white: number;
@@ -42,6 +43,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const [feedback, setFeedback] = useState<string | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const celebrationKey = useRef<string | null>(null);
+  const playSound = useSoundEffects();
 
   const game = useMemo(() => new Chess(fen), [fen]);
   const board = game.board();
@@ -72,8 +74,9 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     }
 
     celebrationKey.current = key;
+    playSound("boardgameWin");
     burstConfetti();
-  }, [history.length, status]);
+  }, [history.length, playSound, status]);
 
   useEffect(() => {
     if (status.type !== "active") {
@@ -114,6 +117,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     if (!piece || piece.color !== game.turn()) {
       setSelected(null);
       setLegalTargets([]);
+      playSound("error");
       setFeedback(piece ? "Wrong color. It is " + turn + " to move." : "No piece selected.");
       return;
     }
@@ -128,12 +132,14 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
     const move = next.move({ from, to, promotion: "q" });
     if (!move) {
       setStatus({ type: "active", message: "Illegal move" });
+      playSound("error");
       setFeedback("Illegal move.");
       setSelected(null);
       setLegalTargets([]);
       return;
     }
 
+    playSound("boardgameTap");
     setFen(next.fen());
     setMoveCount((value) => value + 1);
     setSelected(null);
@@ -156,6 +162,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const dragTargets = legalTargetsForDrag();
 
   function resetGame() {
+    playSound("click");
     setFen(new Chess().fen());
     setSelected(null);
     setLegalTargets([]);
@@ -212,6 +219,7 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
                       if (valid) {
                         commitMove(from, square);
                       } else {
+                        playSound("error");
                         setFeedback("Illegal move.");
                       }
                     }

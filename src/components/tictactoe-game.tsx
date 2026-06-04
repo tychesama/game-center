@@ -3,6 +3,8 @@
 import confetti from "canvas-confetti";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useSoundEffects } from "@/lib/use-sound-effects";
+
 type Cell = "X" | "O" | null;
 type Winner = "player" | "bot" | "draw" | null;
 
@@ -23,6 +25,7 @@ export function TicTacToeGame() {
   const [winner, setWinner] = useState<Winner>(null);
   const [score, setScore] = useState({ player: 0, bot: 0, draw: 0 });
   const celebrationKey = useRef<string | null>(null);
+  const playSound = useSoundEffects();
 
   const winningLine = useMemo(() => findWinningLine(board), [board]);
 
@@ -44,11 +47,13 @@ export function TicTacToeGame() {
 
   function handleSelect(index: number) {
     if (board[index] || winner) {
+      playSound("error");
       return;
     }
 
     const afterPlayer = board.slice();
     afterPlayer[index] = "X";
+    playSound("ticTacToeTap");
 
     const playerResult = resolveBoard(afterPlayer);
     if (playerResult) {
@@ -63,6 +68,7 @@ export function TicTacToeGame() {
       const botIndex = findBestMove(afterPlayer);
       const afterBot = afterPlayer.slice();
       afterBot[botIndex] = "O";
+      playSound("ticTacToeTap");
       const botResult = resolveBoard(afterBot);
       if (botResult) {
         finalizeRound(afterBot, botResult);
@@ -83,9 +89,11 @@ export function TicTacToeGame() {
     setStatus(
       result === "player" ? "You win" : result === "bot" ? "Arcade bot wins" : "Draw round",
     );
+    playSound(result === "player" ? "win" : result === "bot" ? "fail" : "click");
   }
 
   function resetRound() {
+    playSound("click");
     setBoard(Array(9).fill(null));
     setWinner(null);
     setStatus("Your move");

@@ -9,6 +9,7 @@ import {
   tryCheckersMove,
   type CheckersColor,
 } from "@/lib/checkers";
+import { useSoundEffects } from "@/lib/use-sound-effects";
 
 type Timers = {
   red: number;
@@ -27,6 +28,7 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
   const [hoverTarget, setHoverTarget] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const celebrationKey = useRef<string | null>(null);
+  const playSound = useSoundEffects();
 
   useEffect(() => {
     if (state.status.type !== "active") {
@@ -78,8 +80,9 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     }
 
     celebrationKey.current = key;
+    playSound("boardgameWin");
     burstConfetti();
-  }, [state.history.length, state.status]);
+  }, [playSound, state.history.length, state.status]);
 
   function selectOrMove(index: number) {
     if (state.status.type !== "active") {
@@ -88,8 +91,10 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
 
     if (state.selected !== null) {
       const before = state;
+      const valid = before.legalMoves.some((move) => move.from === before.selected && move.to === index);
       setState((current) => tryCheckersMove(current, current.selected as number, index));
-      if (!before.legalMoves.some((move) => move.from === before.selected && move.to === index)) {
+      playSound(valid ? "boardgameTap" : "error");
+      if (!valid) {
         setFeedback("Illegal move.");
       }
       return;
@@ -105,10 +110,12 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
     }
 
     const piece = state.board[index];
+    playSound("error");
     setFeedback(piece ? "Wrong piece. It is " + labelForColor(state.turn) + " to move." : "No piece selected.");
   }
 
   function reset() {
+    playSound("click");
     setState(createInitialCheckersState());
     setTimers(initialTimers);
     celebrationKey.current = null;
@@ -160,8 +167,10 @@ export function CheckersGame(props: { onFeedbackChange?: (message: string | null
                   if (!Number.isNaN(from)) {
                     const valid = state.legalMoves.some((move) => move.from === from && move.to === index);
                     if (valid) {
+                      playSound("boardgameTap");
                       setState((current) => tryCheckersMove(current, from, index));
                     } else {
+                      playSound("error");
                       setFeedback("Illegal move.");
                     }
                   }

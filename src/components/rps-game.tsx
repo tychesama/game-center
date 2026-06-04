@@ -3,6 +3,8 @@
 import confetti from "canvas-confetti";
 import { useEffect, useRef, useState } from "react";
 
+import { useSoundEffects } from "@/lib/use-sound-effects";
+
 type Throw = "rock" | "paper" | "scissors";
 
 const throws: Throw[] = ["rock", "paper", "scissors"];
@@ -27,6 +29,7 @@ export function RpsGame() {
   const countdownTimeouts = useRef<number[]>([]);
   const revealTimeout = useRef<number | null>(null);
   const celebrationKey = useRef<string | null>(null);
+  const playSound = useSoundEffects();
 
   useEffect(() => {
     return () => {
@@ -56,6 +59,7 @@ export function RpsGame() {
 
   function playRound(choice: Throw) {
     if (countdown !== null) {
+      playSound("error");
       return;
     }
 
@@ -67,10 +71,17 @@ export function RpsGame() {
     pendingResult.current = { throw: randomThrow, result };
     setCountdown(3);
     setStatus("Bot reveal in 3");
+    playSound("rpsCountOne");
     countdownTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
     countdownTimeouts.current = [
-      window.setTimeout(() => setCountdown(2), 1000),
-      window.setTimeout(() => setCountdown(1), 2000),
+      window.setTimeout(() => {
+        setCountdown(2);
+        playSound("rpsCountOne");
+      }, 1000),
+      window.setTimeout(() => {
+        setCountdown(1);
+        playSound("rpsCountTwo");
+      }, 2000),
     ];
     if (revealTimeout.current !== null) {
       window.clearTimeout(revealTimeout.current);
@@ -95,6 +106,7 @@ export function RpsGame() {
             ? "Arcade bot wins the round"
             : "Draw round",
       );
+      playSound(pending.result === "player" ? "win" : pending.result === "bot" ? "fail" : "click");
       pendingResult.current = null;
       revealTimeout.current = null;
       countdownTimeouts.current = [];
@@ -102,6 +114,7 @@ export function RpsGame() {
   }
 
   function resetScore() {
+    playSound("click");
     countdownTimeouts.current.forEach((timeout) => window.clearTimeout(timeout));
     countdownTimeouts.current = [];
     if (revealTimeout.current !== null) {
