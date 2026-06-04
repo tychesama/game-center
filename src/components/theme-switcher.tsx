@@ -28,7 +28,7 @@ export function ThemeSwitcher() {
   }, [themeOpen]);
 
   return (
-    <div ref={menuRef} className="gc-games-menu relative" onMouseEnter={() => playSound("hover")}>
+    <div ref={menuRef} className="relative" onMouseEnter={() => playSound("hover")}>
       <button
         type="button"
         className="gc-header-control gc-header-button cursor-pointer px-4"
