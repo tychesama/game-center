@@ -43,7 +43,6 @@ export function SiteHeader() {
             href="/"
             className="gc-header-control gc-header-button px-4"
             onClick={() => playSound("click")}
-            onMouseEnter={() => playSound("hover")}
           >
             Lobby
           </Link>
@@ -61,7 +60,6 @@ export function SiteHeader() {
               ].join(" ")}
               aria-label="Open games menu"
               onClick={() => playSound("click")}
-              onMouseEnter={() => playSound("hover")}
             >
               Games
               <span aria-hidden="true" className="text-sm leading-none">▾</span>
@@ -80,7 +78,6 @@ export function SiteHeader() {
                       playSound("click");
                       setGamesOpen(false);
                     }}
-                    onMouseEnter={() => playSound("hover")}
                     className={[
                       "rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.12em] transition hover:bg-[var(--gc-panel-accent-soft)]",
                       active ? "bg-[var(--gc-panel-accent-soft)] text-[var(--gc-ink)]" : "text-[var(--gc-muted)]",
