@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 
 import {
   defaultThemePreset,
@@ -16,16 +16,15 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 const storageKey = "game-center-theme";
+const themeChangeEvent = "game-center-theme-change";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeName, setThemeName] = useState<ThemePresetName>(() => {
-    if (typeof window === "undefined") {
-      return defaultThemePreset.name;
-    }
+  const themeName = useSyncExternalStore(subscribeToThemeChanges, getThemeSnapshot, getThemeServerSnapshot);
 
-    const saved = window.localStorage.getItem(storageKey) as ThemePresetName | null;
-    return saved && themePresets[saved] ? saved : defaultThemePreset.name;
-  });
+  const setThemeName = useCallback((name: ThemePresetName) => {
+    window.localStorage.setItem(storageKey, name);
+    window.dispatchEvent(new Event(themeChangeEvent));
+  }, []);
 
   useEffect(() => {
     const theme = themePresets[themeName];
@@ -39,7 +38,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.dataset.boardStyle = theme.boardStyle;
     root.dataset.pieceStyle = theme.pieceStyle;
     root.dataset.themePreset = theme.name;
-    window.localStorage.setItem(storageKey, theme.name);
   }, [themeName]);
 
   const value = useMemo(
@@ -47,7 +45,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       activeTheme: themePresets[themeName],
       setThemeName,
     }),
-    [themeName],
+    [setThemeName, themeName],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -61,4 +59,23 @@ export function useThemePreset() {
   }
 
   return context;
+}
+
+function subscribeToThemeChanges(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(themeChangeEvent, onStoreChange);
+
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(themeChangeEvent, onStoreChange);
+  };
+}
+
+function getThemeSnapshot(): ThemePresetName {
+  const saved = window.localStorage.getItem(storageKey) as ThemePresetName | null;
+  return saved && themePresets[saved] ? saved : defaultThemePreset.name;
+}
+
+function getThemeServerSnapshot(): ThemePresetName {
+  return defaultThemePreset.name;
 }

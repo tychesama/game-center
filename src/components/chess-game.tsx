@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import { Chess, type Square } from "chess.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { getActiveChessPieceSet } from "@/lib/themes";
+import { useThemePreset } from "@/components/theme-provider";
 import { useSoundEffects } from "@/lib/use-sound-effects";
 
 type Timers = {
@@ -48,11 +48,12 @@ export function ChessGame(props: { onFeedbackChange?: (message: string | null) =
   const feedbackCooldownTimeoutRef = useRef<number | null>(null);
   const feedbackResetRef = useRef<number | null>(null);
   const playSound = useSoundEffects();
+  const { activeTheme } = useThemePreset();
 
   const game = useMemo(() => new Chess(fen), [fen]);
   const board = game.board();
   const turn = game.turn() === "w" ? "white" : "black";
-  const pieceSet = getActiveChessPieceSet();
+  const pieceSet = activeTheme.chessPieceSet;
   const pieceSizeClass = pieceSet === "arcade" ? "h-[104%] w-[104%]" : "h-[94%] w-[94%]";
   const draggedPiece = dragSource ? game.get(dragSource) : null;
 

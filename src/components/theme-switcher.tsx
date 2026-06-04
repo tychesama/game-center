@@ -39,12 +39,8 @@ export function ThemeSwitcher() {
           setThemeOpen((open) => !open);
         }}
       >
-        <span className="h-2.5 w-2.5 rounded-full border border-[var(--gc-ink)] bg-[var(--gc-accent)]" />
         <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--gc-ink)]">
           Theme
-        </span>
-        <span className="text-xs font-black uppercase tracking-[0.14em] text-[var(--gc-ink)]">
-          {activeTheme.label}
         </span>
         <span aria-hidden="true" className="text-sm leading-none">▾</span>
       </button>
@@ -65,7 +61,7 @@ export function ThemeSwitcher() {
                   setThemeOpen(false);
                 }}
                 className={[
-                  "rounded-2xl px-4 py-3 text-left text-sm font-black uppercase tracking-[0.12em] transition hover:bg-[var(--gc-panel-accent-soft)]",
+                  "cursor-pointer rounded-2xl border-0 bg-transparent px-4 py-3 text-left text-sm font-black uppercase tracking-[0.12em] transition hover:bg-[var(--gc-panel-accent-soft)]",
                   active ? "bg-[var(--gc-panel-accent-soft)] text-[var(--gc-ink)]" : "text-[var(--gc-muted)]",
                 ].join(" ")}
               >
