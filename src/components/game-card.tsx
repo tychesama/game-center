@@ -15,7 +15,7 @@ export function GameCard({ game }: { game: Game }) {
       style={themeStyle(game.theme)}
       onClick={() => playSound("click")}
       onMouseEnter={() => playSound("hover")}
-      className="group relative overflow-hidden rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] p-5 shadow-[8px_8px_0_var(--gc-ink)] transition duration-200 hover:-translate-y-1 hover:shadow-[12px_12px_0_var(--gc-ink)]"
+      className="gc-game-card group relative overflow-hidden rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] p-5 shadow-[8px_8px_0_var(--gc-ink)] transition duration-200 hover:-translate-y-1 hover:shadow-[12px_12px_0_var(--gc-ink)]"
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--gc-accent)] opacity-70 transition group-hover:scale-125" />
       <div className="relative grid gap-5 sm:grid-cols-[1fr_8rem] sm:items-center">
