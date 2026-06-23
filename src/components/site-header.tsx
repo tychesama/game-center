@@ -90,7 +90,7 @@ export function SiteHeader() {
             <summary
               className={[
                 "gc-header-control gc-header-button cursor-pointer list-none px-4",
-                games.some((game) => pathname === game.href)
+                games.some((game) => game.href && pathname === game.href)
                   ? "bg-[var(--gc-panel-accent-soft)] shadow-[4px_4px_0_color-mix(in_srgb,var(--gc-accent)_45%,transparent)]"
                   : "",
               ].join(" ")}
@@ -105,11 +105,25 @@ export function SiteHeader() {
               aria-label="Games"
             >
               {games.map((game) => {
-                const active = pathname === game.href;
+                const href = game.href ?? "";
+                const active = href ? pathname === href : false;
+
+                if (game.locked || href === "") {
+                  return (
+                    <span
+                      key={game.slug}
+                      className="rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-[var(--gc-muted)] opacity-70"
+                      aria-disabled="true"
+                    >
+                      {game.title} · Locked
+                    </span>
+                  );
+                }
+
                 return (
                   <Link
                     key={game.slug}
-                    href={game.href}
+                    href={href}
                     onClick={() => {
                       playSound("click");
                       setGamesOpen(false);

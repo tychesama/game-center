@@ -4,8 +4,9 @@ GameCenter is a playful browser-based board game hub built to grow in phases. Ph
 
 ## Current Scope
 
-- Landing page with cards for available games
-- Dedicated playable routes for \`chess\` and \`checkers\`
+- Landing page with cards for available games and reserved future cabinet slots
+- Dedicated playable routes for `chess`, `checkers`, `tictactoe`, and `rps`
+- Snack Rush GameCenter slot shell with candy-shop preview styling
 - Global theme switcher that affects layout, colors, fonts, buttons, board styling, and piece styling
 - Shared board interaction components for click-to-move and drag-and-drop
 - Chess powered by \`chess.js\` for standard legal movement and game states

@@ -1,6 +1,14 @@
 import { gameThemes } from "./themes";
 
-export type GameSlug = "chess" | "checkers" | "tictactoe" | "rps";
+export type GameSlug =
+  | "chess"
+  | "checkers"
+  | "tictactoe"
+  | "rps"
+  | "snackrush"
+  | "future";
+
+export type GamePreview = "board" | "snackrush" | "locked";
 
 export type Game = {
   slug: GameSlug;
@@ -9,7 +17,9 @@ export type Game = {
   description: string;
   players: string;
   status: string;
-  href: string;
+  href?: string;
+  locked?: boolean;
+  preview?: GamePreview;
   theme: (typeof gameThemes)[GameSlug];
 };
 
@@ -57,6 +67,30 @@ export const games: Game[] = [
     status: "Playable",
     href: "/rps",
     theme: gameThemes.rps,
+  },
+  {
+    slug: "snackrush",
+    title: "Snack Rush",
+    eyebrow: "Candy chaos",
+    description:
+      "A bright candy-shop arcade slot for catching sweets, dodging rotten snacks, chaining skills, and chasing Sugar Rush scores.",
+    players: "1 PLAYER",
+    status: "New slot",
+    href: "/snackrush",
+    preview: "snackrush",
+    theme: gameThemes.snackrush,
+  },
+  {
+    slug: "future",
+    title: "Future Game",
+    eyebrow: "Cabinet locked",
+    description:
+      "A reserved mystery slot for whatever strange little game joins the cabinet next.",
+    players: "TBA",
+    status: "Locked",
+    locked: true,
+    preview: "locked",
+    theme: gameThemes.future,
   },
 ];
 

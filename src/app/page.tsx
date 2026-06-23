@@ -15,23 +15,23 @@ export default function Home() {
               One lobby for dangerously civilized games.
             </h1>
             <p className="mt-7 max-w-2xl text-lg font-semibold leading-8 text-[var(--gc-muted)]">
-              GameCenter is a playful board-game hub built for modular growth.
-              Phase 2 brings real local chess, checkers, tic tac toe, and rock
-              paper scissors into the cabinet without sacrificing the strange
-              little carnival energy.
+              GameCenter is a playful browser-game hub built for modular growth.
+              Phase 2 brings real local chess, checkers, tic tac toe, rock
+              paper scissors, and a new Snack Rush cabinet slot into the lobby
+              while leaving one mystery cabinet locked for future chaos.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <span className="gc-badge">Playable chess</span>
               <span className="gc-badge">Playable checkers</span>
-              <span className="gc-badge">Solo quickplay modes</span>
-              <span className="gc-badge">Drag or click</span>
+              <span className="gc-badge">Snack Rush slot</span>
+              <span className="gc-badge">Future cabinet locked</span>
             </div>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               <div className="gc-panel p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">
-                  Modes
+                  Slots
                 </p>
-                <p className="mt-2 text-3xl font-black">4</p>
+                <p className="mt-2 text-3xl font-black">6</p>
               </div>
               <div className="gc-panel p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--gc-muted)]">

@@ -32,7 +32,9 @@ export function GamesMenu() {
     };
   }, []);
 
-  const activeGame = games.find((game) => pathname.startsWith(game.href));
+  const activeGame = games.find((game) =>
+    game.href ? pathname.startsWith(game.href) : false,
+  );
 
   return (
     <div ref={ref} className="relative">
@@ -50,11 +52,30 @@ export function GamesMenu() {
       {open ? (
         <div className="absolute right-0 top-[calc(100%+0.75rem)] z-40 min-w-72 rounded-[calc(var(--gc-radius)-0.2rem)] border border-[color:color-mix(in_srgb,var(--gc-ink)_18%,transparent)] bg-[var(--gc-panel-float)] p-2 shadow-[var(--gc-card-shadow)]">
           {games.map((game) => {
-            const active = pathname.startsWith(game.href);
+            const href = game.href ?? "";
+            const active = href ? pathname.startsWith(href) : false;
+
+            if (game.locked || href === "") {
+              return (
+                <span
+                  key={game.slug}
+                  className="block rounded-2xl px-4 py-3 opacity-70"
+                  aria-disabled="true"
+                >
+                  <span className="block text-sm font-black uppercase tracking-[0.14em]">
+                    {game.title} · Locked
+                  </span>
+                  <span className="mt-1 block text-sm font-semibold text-[var(--gc-muted)]">
+                    {game.description}
+                  </span>
+                </span>
+              );
+            }
+
             return (
               <Link
-                key={game.href}
-                href={game.href}
+                key={game.slug}
+                href={href}
                 onClick={() => setOpen(false)}
                 className={[
                   "block rounded-2xl px-4 py-3 transition",

@@ -2,22 +2,53 @@
 
 import Link from "next/link";
 
-import type { Game } from "@/lib/games";
+import type { Game, GamePreview } from "@/lib/games";
 import { themeStyle } from "@/lib/themes";
 import { useSoundEffects } from "@/lib/use-sound-effects";
 
 export function GameCard({ game }: { game: Game }) {
   const playSound = useSoundEffects();
+  const href = game.href ?? "";
+  const locked = game.locked || href === "";
+  const cardClassName = [
+    "gc-game-card group relative overflow-hidden rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] p-5 shadow-[8px_8px_0_var(--gc-ink)] transition duration-200",
+    locked
+      ? "cursor-not-allowed opacity-90"
+      : "hover:-translate-y-1 hover:shadow-[12px_12px_0_var(--gc-ink)]",
+  ].join(" ");
+  const content = <GameCardContent game={game} locked={locked} />;
+
+  if (locked) {
+    return (
+      <article
+        style={themeStyle(game.theme)}
+        className={cardClassName}
+        data-game-preview={game.preview ?? "board"}
+        data-disabled="true"
+      >
+        {content}
+      </article>
+    );
+  }
 
   return (
     <Link
-      href={game.href}
+      href={href}
       style={themeStyle(game.theme)}
       onClick={() => playSound("click")}
       onMouseEnter={() => playSound("hover")}
-      className="gc-game-card group relative overflow-hidden rounded-[var(--gc-radius)] border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] p-5 shadow-[8px_8px_0_var(--gc-ink)] transition duration-200 hover:-translate-y-1 hover:shadow-[12px_12px_0_var(--gc-ink)]"
+      className={cardClassName}
+      data-game-preview={game.preview ?? "board"}
     >
-      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--gc-accent)] opacity-70 transition group-hover:scale-125" />
+      {content}
+    </Link>
+  );
+}
+
+function GameCardContent({ game, locked }: { game: Game; locked: boolean }) {
+  return (
+    <>
+      <div className="gc-game-card-orb absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--gc-accent)] opacity-70 transition group-hover:scale-125" />
       <div className="relative grid gap-5 sm:grid-cols-[1fr_8rem] sm:items-center">
         <div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[var(--gc-accent-strong)]">
@@ -34,14 +65,26 @@ export function GameCard({ game }: { game: Game }) {
               {game.players}
             </span>
             <span className="rounded-full border border-[var(--gc-ink)] px-3 py-2">
-              {game.status}
+              {locked ? "Locked" : game.status}
             </span>
           </div>
         </div>
-        <MiniBoard />
+        <MiniPreview variant={game.preview ?? "board"} />
       </div>
-    </Link>
+    </>
   );
+}
+
+function MiniPreview({ variant }: { variant: GamePreview }) {
+  if (variant === "snackrush") {
+    return <SnackRushPreview />;
+  }
+
+  if (variant === "locked") {
+    return <LockedPreview />;
+  }
+
+  return <MiniBoard />;
 }
 
 function MiniBoard() {
@@ -57,6 +100,37 @@ function MiniBoard() {
           }
         />
       ))}
+    </div>
+  );
+}
+
+function SnackRushPreview() {
+  const candies = ["🍩", "🍬", "⭐", "🧲", "💣", "🥫"];
+
+  return (
+    <div className="gc-snackrush-preview aspect-square overflow-hidden rounded-3xl border-2 border-[var(--gc-ink)] shadow-[4px_4px_0_var(--gc-ink)]">
+      <div className="gc-snackrush-preview-title">Rush</div>
+      <div className="gc-snackrush-candy-grid" aria-hidden="true">
+        {candies.map((candy) => (
+          <span key={candy}>{candy}</span>
+        ))}
+      </div>
+      <div className="gc-snackrush-basket" aria-hidden="true">
+        🧺
+      </div>
+    </div>
+  );
+}
+
+function LockedPreview() {
+  return (
+    <div className="gc-locked-preview aspect-square overflow-hidden rounded-2xl border-2 border-dashed border-[var(--gc-ink)] bg-[var(--gc-board-light)] shadow-[4px_4px_0_var(--gc-ink)]">
+      <span className="text-4xl" aria-hidden="true">
+        🔒
+      </span>
+      <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.18em]">
+        Future
+      </span>
     </div>
   );
 }

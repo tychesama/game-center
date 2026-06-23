@@ -273,6 +273,98 @@ button {
     drop-shadow(0 8px 14px color-mix(in srgb, var(--gc-ink) 28%, transparent));
 }
 
+.gc-game-card[data-game-preview="snackrush"] {
+  background:
+    radial-gradient(circle at 15% 18%, rgba(255, 244, 107, 0.9) 0 42px, transparent 43px),
+    radial-gradient(circle at 92% 16%, rgba(49, 214, 255, 0.7) 0 58px, transparent 59px),
+    linear-gradient(135deg, #fff8ff 0%, #fff8ef 52%, #eaffff 100%);
+}
+
+.gc-game-card[data-game-preview="snackrush"] .gc-game-card-orb {
+  background: linear-gradient(135deg, #ff2f91, #ffb000 52%, #31d6ff);
+  opacity: 0.82;
+}
+
+.gc-game-card[data-game-preview="locked"] {
+  background:
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--gc-accent) 20%, transparent) 0 10px, transparent 10px 20px),
+    var(--gc-surface);
+}
+
+.gc-snackrush-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 28% 20%, #fff46b 0 24px, transparent 25px),
+    radial-gradient(circle at 78% 20%, #31d6ff 0 25px, transparent 26px),
+    linear-gradient(135deg, #ff6dd5, #ffec5c 48%, #5ff4ff);
+}
+
+.gc-snackrush-preview::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1.35rem;
+  background: repeating-linear-gradient(90deg, #ff5bbd 0 12px, #fff46b 12px 24px, #31d6ff 24px 36px, #9a6dff 36px 48px);
+  opacity: 0.7;
+}
+
+.gc-snackrush-preview-title {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%) rotate(-2deg);
+  border: 2px solid var(--gc-ink);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7a2ee8, #ff2f91, #ffb000);
+  color: white;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 1000;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 var(--gc-ink);
+  box-shadow: 0 3px 0 var(--gc-ink);
+}
+
+.gc-snackrush-candy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  width: 72%;
+  transform: translateY(0.18rem);
+}
+
+.gc-snackrush-candy-grid span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 2px solid var(--gc-ink);
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, white 86%, var(--gc-accent));
+  box-shadow: 0 3px 0 var(--gc-ink);
+  font-size: 1.05rem;
+}
+
+.gc-snackrush-basket {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 1.1rem;
+  z-index: 1;
+  font-size: 1.45rem;
+  filter: drop-shadow(2px 2px 0 var(--gc-ink));
+}
+
+.gc-locked-preview {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.35rem;
+  color: var(--gc-muted);
+}
+
 .gc-feedback-alert {
   animation: gc-feedback-blink 950ms steps(1, end) infinite;
 }
