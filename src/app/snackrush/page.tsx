@@ -7,17 +7,17 @@ const showcasePanels = [
   {
     title: "What is it?",
     icon: "🍬",
-    body: "SnackRush is a bright candy-shop arcade website built around a goofy, fast, playful game idea. It is meant to feel colorful, loud, readable, and instantly fun from the first screen.",
+    body: "SnackRush is a fast-paced browser arcade game about candy shop chaos. Move a goofy basket, catch falling sweets, dodge rotten food, use skills, survive storms, and chase leaderboard scores.",
   },
   {
-    title: "Why I built it",
-    icon: "💡",
-    body: "I built the site mostly for fun. I wanted my own game space where I could enjoy the mechanics, try ideas I personally like, and keep shaping the vibe without waiting on someone else's rules.",
+    title: "How it plays",
+    icon: "🧺",
+    body: "Good snacks build Sugar Score and Combo Pop while rotten drops break the rush. Dash, Recycle, MRE, and Special give you quick decisions when the board starts getting messy.",
   },
   {
-    title: "Build + GitHub",
-    icon: "🤖",
-    body: "The project is mostly AI-generated work shaped through iteration. The site is built as a React/Vite web app with custom CSS, local browser state, and a GitHub repo tracking the source.",
+    title: "Modes + GitHub",
+    icon: "⚡",
+    body: "Pick Sugar Rush for a one-minute sprint, Adventure for a five-minute survival run, or Endless when you want the candy shop to keep pushing back. The source is tracked on GitHub.",
     link: "https://github.com/tychesama/snack-rush",
   },
 ];
@@ -43,7 +43,7 @@ export default function SnackRushPage() {
       </div>
 
       <section className="relative mx-auto flex min-h-[calc(100vh-5.5rem)] w-full max-w-[1500px] flex-col justify-center px-5 py-8 sm:px-8 lg:px-12">
-        <div className="relative overflow-hidden rounded-[calc(var(--gc-radius)+0.6rem)] border-2 border-[color-mix(in_srgb,var(--gc-ink)_82%,transparent)] bg-[color-mix(in_srgb,var(--gc-surface)_94%,white)] px-5 py-8 shadow-[var(--gc-card-shadow)] sm:px-8 lg:px-12 lg:py-11">
+        <div className="relative overflow-hidden rounded-[calc(var(--gc-radius)+0.6rem)] border-2 border-[color-mix(in_srgb,var(--gc-ink)_82%,transparent)] bg-[color-mix(in_srgb,var(--gc-surface)_94%,white)] px-5 py-7 shadow-[var(--gc-card-shadow)] sm:px-8 lg:px-12 lg:py-9">
           <div className="pointer-events-none absolute inset-5 rounded-[calc(var(--gc-radius)+0.1rem)] border border-dashed border-[color-mix(in_srgb,var(--gc-accent)_40%,transparent)]" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--gc-accent)_60%,transparent),transparent)]" />
           <div className="pointer-events-none absolute left-10 top-10 text-4xl text-[var(--gc-accent)] opacity-40 drop-shadow-[2px_2px_0_color-mix(in_srgb,var(--gc-ink)_28%,transparent)]">
@@ -65,22 +65,35 @@ export default function SnackRushPage() {
             </span>
           </div>
 
-          <div className="relative mt-10 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+          <div className="relative mx-auto mt-8 flex max-w-2xl justify-center transition duration-200 hover:-translate-y-1">
+            <a
+              href="https://snackrush.joemidpan.com"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => playSound("click")}
+              onMouseEnter={() => playSound("hover")}
+              className="gc-button gc-snackrush-visit min-h-16 w-full px-6 py-5 text-center text-base tracking-[0.18em] sm:text-lg"
+            >
+              Visit snackrush.joemidpan.com ↗
+            </a>
+          </div>
+
+          <div className="relative mt-8 grid gap-4 lg:grid-cols-3 lg:items-stretch">
             {showcasePanels.map((panel) => (
               <article
                 key={panel.title}
-                className="group rounded-[calc(var(--gc-radius)+0.15rem)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-float)] p-4 shadow-[var(--gc-card-shadow)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_color-mix(in_srgb,var(--gc-accent)_18%,transparent)]"
+                className="group rounded-[calc(var(--gc-radius)+0.05rem)] border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-float)] p-3 shadow-[var(--gc-card-shadow)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_color-mix(in_srgb,var(--gc-accent)_18%,transparent)]"
               >
-                <div className="min-h-full overflow-hidden rounded-[calc(var(--gc-radius)-0.15rem)] border border-[color-mix(in_srgb,var(--gc-ink)_28%,transparent)] bg-[linear-gradient(135deg,var(--gc-panel-soft),var(--gc-surface))] p-6 transition duration-200 group-hover:bg-[linear-gradient(135deg,var(--gc-panel-strong),var(--gc-surface))]">
-                  <div className="flex items-start gap-4">
-                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] text-3xl shadow-[3px_3px_0_color-mix(in_srgb,var(--gc-ink)_70%,transparent)] transition duration-200 group-hover:scale-105" aria-hidden="true">
+                <div className="min-h-full overflow-hidden rounded-[calc(var(--gc-radius)-0.2rem)] border border-[color-mix(in_srgb,var(--gc-ink)_28%,transparent)] bg-[linear-gradient(135deg,var(--gc-panel-soft),var(--gc-surface))] p-5 transition duration-200 group-hover:bg-[linear-gradient(135deg,var(--gc-panel-strong),var(--gc-surface))]">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] text-2xl shadow-[3px_3px_0_color-mix(in_srgb,var(--gc-ink)_70%,transparent)] transition duration-200 group-hover:scale-105" aria-hidden="true">
                       {panel.icon}
                     </span>
-                    <h2 className="text-2xl font-black uppercase leading-tight tracking-[0] text-[var(--gc-ink)] sm:text-3xl">
+                    <h2 className="text-xl font-black uppercase leading-tight tracking-[0] text-[var(--gc-ink)] sm:text-2xl">
                       {panel.title}
                     </h2>
                   </div>
-                  <p className="mt-6 text-base font-bold leading-8 text-[var(--gc-muted)] sm:text-lg">
+                  <p className="mt-4 text-sm font-bold leading-7 text-[var(--gc-muted)] sm:text-base">
                     {panel.body}
                   </p>
                   {panel.link ? (
@@ -93,7 +106,7 @@ export default function SnackRushPage() {
                         event.stopPropagation();
                         playSound("hover");
                       }}
-                      className="gc-button mt-6 w-full text-center"
+                      className="gc-button mt-5 w-full text-center"
                     >
                       View GitHub repo ↗
                     </a>
@@ -101,19 +114,6 @@ export default function SnackRushPage() {
                 </div>
               </article>
             ))}
-          </div>
-
-          <div className="relative mx-auto mt-10 max-w-4xl transition duration-200 hover:-translate-y-1">
-            <a
-              href="https://snackrush.joemidpan.com"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => playSound("click")}
-              onMouseEnter={() => playSound("hover")}
-              className="gc-button w-full px-6 py-5 text-center text-base tracking-[0.18em] sm:text-lg"
-            >
-              Visit snackrush.joemidpan.com ↗
-            </a>
           </div>
         </div>
       </section>

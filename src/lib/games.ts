@@ -8,7 +8,7 @@ export type GameSlug =
   | "snackrush"
   | "future";
 
-export type GamePreview = "board" | "snackrush" | "locked";
+export type GamePreview = "board" | "tictactoe" | "rps" | "snackrush" | "locked";
 
 export type Game = {
   slug: GameSlug;
@@ -55,6 +55,7 @@ export const games: Game[] = [
     players: "1 PLAYER vs BOT",
     status: "Playable",
     href: "/tictactoe",
+    preview: "tictactoe",
     theme: gameThemes.tictactoe,
   },
   {
@@ -66,6 +67,7 @@ export const games: Game[] = [
     players: "1 PLAYER vs BOT",
     status: "Playable",
     href: "/rps",
+    preview: "rps",
     theme: gameThemes.rps,
   },
   {

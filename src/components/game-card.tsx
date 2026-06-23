@@ -46,6 +46,8 @@ export function GameCard({ game }: { game: Game }) {
 }
 
 function GameCardContent({ game, locked }: { game: Game; locked: boolean }) {
+  const showStatus = locked;
+
   return (
     <>
       <div className="gc-game-card-orb absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[var(--gc-accent)] opacity-70 transition group-hover:scale-125" />
@@ -64,9 +66,11 @@ function GameCardContent({ game, locked }: { game: Game; locked: boolean }) {
             <span className="rounded-full bg-[var(--gc-accent)] px-3 py-2 text-[var(--gc-accent-ink)]">
               {game.players}
             </span>
-            <span className="rounded-full border border-[var(--gc-ink)] px-3 py-2">
-              {locked ? "Locked" : game.status}
-            </span>
+            {showStatus ? (
+              <span className="rounded-full border border-[var(--gc-ink)] px-3 py-2">
+                {locked ? "Locked" : game.status}
+              </span>
+            ) : null}
           </div>
         </div>
         <MiniPreview variant={game.preview ?? "board"} />
@@ -80,11 +84,52 @@ function MiniPreview({ variant }: { variant: GamePreview }) {
     return <SnackRushPreview />;
   }
 
+  if (variant === "tictactoe") {
+    return <TicTacToePreview />;
+  }
+
+  if (variant === "rps") {
+    return <RpsPreview />;
+  }
+
   if (variant === "locked") {
     return <LockedPreview />;
   }
 
   return <MiniBoard />;
+}
+
+function TicTacToePreview() {
+  const marks = ["X", "", "O", "", "X", "", "O", "", "X"];
+
+  return (
+    <div className="gc-tictactoe-preview grid aspect-square grid-cols-3 gap-1.5 overflow-hidden rounded-2xl border-2 border-[var(--gc-ink)] bg-[var(--gc-panel-soft)] p-2 shadow-[4px_4px_0_var(--gc-ink)]">
+      {marks.map((mark, index) => (
+        <span key={`${mark}-${index}`} className="grid place-items-center rounded-xl border-2 border-[color-mix(in_srgb,var(--gc-ink)_70%,transparent)] bg-[var(--gc-surface)] text-2xl font-black leading-none">
+          {mark}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function RpsPreview() {
+  return (
+    <div className="gc-rps-preview relative grid aspect-square place-items-center overflow-hidden rounded-2xl border-2 border-[var(--gc-ink)] bg-[linear-gradient(135deg,var(--gc-panel-soft),var(--gc-surface))] shadow-[4px_4px_0_var(--gc-ink)]">
+      <span className="absolute left-2 top-2 grid h-10 w-10 place-items-center rounded-full border-2 border-[var(--gc-ink)] bg-[var(--gc-accent)] text-xl shadow-[2px_2px_0_var(--gc-ink)]">
+        ✊
+      </span>
+      <span className="absolute right-2 top-8 grid h-10 w-10 place-items-center rounded-full border-2 border-[var(--gc-ink)] bg-[var(--gc-accent-strong)] text-xl shadow-[2px_2px_0_var(--gc-ink)]">
+        ✌️
+      </span>
+      <span className="absolute bottom-2 left-1/2 grid h-10 w-10 -translate-x-1/2 place-items-center rounded-full border-2 border-[var(--gc-ink)] bg-[var(--gc-surface)] text-xl shadow-[2px_2px_0_var(--gc-ink)]">
+        ✋
+      </span>
+      <span className="font-mono text-xs font-black uppercase tracking-[0.18em] text-[var(--gc-muted)]">
+        VS
+      </span>
+    </div>
+  );
 }
 
 function MiniBoard() {

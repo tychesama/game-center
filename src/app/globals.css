@@ -285,6 +285,19 @@ button {
   opacity: 0.82;
 }
 
+.gc-game-card[data-game-preview="tictactoe"] {
+  background:
+    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--gc-accent) 34%, transparent), transparent 26%),
+    linear-gradient(135deg, var(--gc-surface), color-mix(in srgb, var(--gc-accent-strong) 12%, var(--gc-surface)));
+}
+
+.gc-game-card[data-game-preview="rps"] {
+  background:
+    radial-gradient(circle at 13% 20%, color-mix(in srgb, var(--gc-accent) 38%, transparent), transparent 27%),
+    radial-gradient(circle at 88% 80%, color-mix(in srgb, var(--gc-accent-strong) 30%, transparent), transparent 25%),
+    linear-gradient(135deg, var(--gc-surface), color-mix(in srgb, var(--gc-accent) 10%, var(--gc-surface)));
+}
+
 .gc-game-card[data-game-preview="locked"] {
   background:
     repeating-linear-gradient(135deg, color-mix(in srgb, var(--gc-accent) 20%, transparent) 0 10px, transparent 10px 20px),
@@ -357,6 +370,37 @@ button {
   filter: drop-shadow(2px 2px 0 var(--gc-ink));
 }
 
+.gc-snackrush-visit {
+  background:
+    radial-gradient(circle at 18% 24%, color-mix(in srgb, white 48%, transparent), transparent 18%),
+    linear-gradient(90deg, var(--gc-accent), var(--gc-accent-strong), var(--gc-board-dark));
+  color: var(--gc-accent-ink);
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 10px 0 color-mix(in srgb, var(--gc-ink) 82%, transparent),
+    0 0 28px color-mix(in srgb, var(--gc-accent) 45%, transparent);
+}
+
+.gc-snackrush-visit::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto -40% -35%;
+  width: 32%;
+  z-index: -1;
+  transform: rotate(18deg);
+  background: color-mix(in srgb, white 58%, transparent);
+  filter: blur(2px);
+  animation: gc-snackrush-shine 2.6s ease-in-out infinite;
+}
+
+.gc-snackrush-visit:hover {
+  box-shadow:
+    0 12px 0 color-mix(in srgb, var(--gc-ink) 82%, transparent),
+    0 0 42px color-mix(in srgb, var(--gc-accent-strong) 48%, transparent);
+}
+
 .gc-locked-preview {
   display: grid;
   place-items: center;
@@ -367,6 +411,16 @@ button {
 
 .gc-feedback-alert {
   animation: gc-feedback-blink 950ms steps(1, end) infinite;
+}
+
+@keyframes gc-snackrush-shine {
+  0%, 28% {
+    left: -35%;
+  }
+
+  62%, 100% {
+    left: 110%;
+  }
 }
 
 @keyframes gc-feedback-blink {
@@ -397,6 +451,40 @@ button {
     radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--gc-accent) 45%, transparent), transparent 28%),
     radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--gc-board-dark) 25%, transparent), transparent 28%),
     linear-gradient(135deg, var(--gc-panel-float), color-mix(in srgb, var(--gc-background) 88%, var(--gc-mix-base)));
+}
+
+.gc-social-button {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid var(--gc-ink);
+  border-radius: 999px;
+  background: var(--gc-panel-soft);
+  color: var(--gc-ink);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--gc-ink) 72%, transparent);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.gc-social-button:hover {
+  transform: translateY(-2px);
+  background: var(--gc-panel-accent-soft);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--gc-ink) 72%, transparent);
+}
+
+.gc-social-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--gc-accent-strong) 72%, white);
+  outline-offset: 3px;
+}
+
+.gc-social-button svg,
+.gc-social-button img {
+  display: block;
+  flex: none;
+  object-fit: contain;
 }
 
 [data-theme-preset="midnight"] .gc-midnight-stroke {
